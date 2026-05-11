@@ -362,7 +362,7 @@
 
   <div class="card card-gold">
     <span class="stag stag-gold">▸ 新增最新開獎紀錄</span>
-    <div style="font-size:18px;color:var(--muted);margin-bottom:8px">開獎後輸入6碼（1-49）＋特別號：</div>
+    <div style="font-size:18px;color:var(--muted);margin-bottom:8px">開獎後輸入6個主號（1–49）：</div>
     <div class="vi-row" id="u-big-inputs"></div>
     <button class="ubtn" onclick="addDraw('big')">＋ 加入並更新預測</button>
   </div>
@@ -383,21 +383,20 @@
     <div style="font-size:18px;color:var(--muted)">預測期別：<b id="nd-big" style="color:var(--text)">—</b></div>
     <div class="pslbl">主號 6 碼（1–49）</div>
     <div class="balls" id="pb-big"></div>
-    <div class="pslbl">特別號參考</div>
-    <div class="balls" id="ps-big"></div>
+
     <div class="bk-row" id="bk-big"></div>
     <div class="feat-row" id="ft-big"></div>
   </div>
 
   <div class="rcard card" id="rc-big">
-    <span class="stag stag-green">▸ 有獎命中率（普獎門檻：3碼 或 2碼＋特別號）</span>
+    <span class="stag stag-green">▸ 有獎命中率（普獎門檻：主號3碼以上）</span>
     <div id="rl-big"></div>
     <div style="font-size:18px;color:var(--muted);margin-top:6px;line-height:1.6" id="hn-big"></div>
   </div>
 
   <div class="vcard card" id="vc-big">
     <span class="stag stag-green">▸ 開獎後驗證</span>
-    <div style="font-size:18px;color:var(--muted);margin-bottom:8px">輸入實際號碼驗證命中：</div>
+    <div style="font-size:18px;color:var(--muted);margin-bottom:8px">輸入實際開獎6個主號（命中3碼以上有獎）：</div>
     <div class="vi-row" id="vi-big"></div>
     <button class="vbtn" onclick="verify('big')">驗 證</button>
     <div class="vres" id="vr-big">
@@ -555,7 +554,7 @@
 
 <script>
 const CFG={
-  big:{max:49,pick:6,hasSp:true,spMax:49,name:'大樂透',drawDays:[2,5]},
+  big:{max:49,pick:6,hasSp:false,spMax:0,name:'大樂透',drawDays:[2,5]},
   '539':{max:39,pick:5,hasSp:false,spMax:0,name:'今彩539',drawDays:[1,2,3,4,5,6]},
   pw:{max:38,pick:6,hasSp:true,spMax:8,name:'威力彩',drawDays:[1,4]}
 };
@@ -697,7 +696,7 @@ function mkBall(n,cls){const d=document.createElement('div');d.className=`ball $
 function sleep(ms){return new Promise(r=>setTimeout(r,ms));}
 
 function isWin(game,pred,actual,actualSp,predSp){
-  if(game==='big'){const h=pred.filter(n=>actual.includes(n)).length;return{win:h>=3||(h===2&&pred.includes(actualSp)),hits:h,label:h>=3?`主號${h}碼`:h===2&&pred.includes(actualSp)?'2碼+特別號':`${h}碼`};}
+  if(game==='big'){const h=pred.filter(n=>actual.includes(n)).length;return{win:h>=3,hits:h,label:`主號${h}碼`};}
   if(game==='539'){const h=pred.filter(n=>actual.includes(n)).length;return{win:h>=2,hits:h,label:`${h}碼命中`};}
   const h=pred.filter(n=>actual.includes(n)).length;const sp=predSp===actualSp;
   return{win:h>=3||(h>=1&&sp)||sp,hits:h,label:h>=3?`第一區${h}碼`:sp?`${h}碼+第二區`:`${h}碼`};
@@ -814,14 +813,13 @@ async function gen(g){
   const backup=vs.slice(cfg.pick,cfg.pick+4).map(x=>x.n);
 
   let spNum=null;
-  if(g==='big'){spNum=sd(miss(D,cfg.max)).filter(x=>!topN.includes(x.n))[0].n;}
-  else if(g==='pw'){spNum=getPwSp(D);}
+  if(g==='pw'){spNum=getPwSp(D);}
 
   const nd=nextDate(g);
   document.getElementById(`nd-${g}`).textContent=nd;
   const pb=document.getElementById(`pb-${g}`);pb.innerHTML='';
   topN.forEach(n=>pb.appendChild(mkBall(n,'bpred')));
-  if(g==='big'){const ps=document.getElementById(`ps-${g}`);ps.innerHTML='';if(spNum)ps.appendChild(mkBall(spNum,'bpred-sp'));}
+
   if(g==='pw'){const pp=document.getElementById(`pp-${g}`);pp.innerHTML='';if(spNum)pp.appendChild(mkBall(spNum,'bpred-pw'));}
   document.getElementById(`bk-${g}`).textContent=backup.length?`備選：${backup.join('  ')}（包牌參考）`:'';
   const sm=topN.reduce((a,b)=>a+b,0),oe=topN.filter(n=>n%2===1).length;

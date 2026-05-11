@@ -1,0 +1,894 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="theme-color" content="#09090f">
+<title>台彩三合一智慧預測</title>
+<style>
+  :root {
+    --bg: #09090f;
+    --s1: #111120;
+    --s2: #18182a;
+    --s3: #22223a;
+    --a1: #7c6fff;
+    --a2: #ff5f7e;
+    --a3: #00e5a0;
+    --gold: #ffc94d;
+    --text: #dddaf8;
+    --muted: #6a6890;
+    --border: rgba(124,111,255,0.18);
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+  html { scroll-behavior: smooth; font-size: 16px; }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: -apple-system, 'PingFang TC', 'Noto Sans TC', BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    font-size:16px;
+    line-height: 1.6;
+    min-height: 100vh;
+    min-height: -webkit-fill-available;
+    padding: 0;
+    overflow-x: hidden;
+  }
+
+  /* Header */
+  .header {
+    background: linear-gradient(180deg, rgba(17,17,32,0.98) 0%, rgba(9,9,15,0.95) 100%);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border-bottom: 0.5px solid var(--border);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    padding: 14px 18px 12px;
+  }
+  .header-inner { max-width: 760px; margin: 0 auto; }
+  .header-top { display: flex; align-items: center; justify-content: space-between; margin-bottom: 6px; }
+  .logo-tag { font-family: 'Courier New', monospace; font-size: clamp(11px, 1.4vw, 13px); color: var(--a3); letter-spacing: 3px; opacity: 0.85; }
+  .header h1 { font-size: clamp(19px, 3.2vw, 24px); font-weight: 700; line-height: 1.3; }
+  .header h1 em { font-style: normal; color: var(--a1); }
+  .warn-sm { font-size: clamp(12px, 1.8vw, 14px); color: var(--muted); line-height: 1.5; }
+
+  /* Game Tabs */
+  .gtabs {
+    display: flex;
+    gap: 0;
+    background: var(--s1);
+    border-bottom: 0.5px solid var(--border);
+    position: sticky;
+    top: 90px;
+    z-index: 99;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+  }
+  .gtabs::-webkit-scrollbar { display: none; }
+  .gtab {
+    flex: 1;
+    min-width: 100px;
+    padding: 12px 8px 10px;
+    background: transparent;
+    border: none;
+    border-bottom: 3px solid transparent;
+    cursor: pointer;
+    text-align: center;
+    color: var(--muted);
+    transition: all .18s;
+    -webkit-appearance: none;
+  }
+  .gtab.on {
+    color: var(--text);
+    border-bottom-color: var(--a1);
+    background: rgba(124,111,255,0.06);
+  }
+  .gtab .gi { font-size: clamp(22px, 3.5vw, 26px); display: block; margin-bottom: 3px; }
+  .gtab .gn { font-size: clamp(14px, 2vw, 16px); font-weight: 600; display: block; }
+  .gtab .gd { font-size: clamp(11px, 1.5vw, 13px); font-family: 'Courier New', monospace; display: block; margin-top: 2px; color: var(--muted); }
+  .gtab.on .gd { color: var(--a3); }
+
+  /* Main content */
+  .main { max-width: 760px; margin: 0 auto; padding: 18px 16px 80px; }
+  .gpane { display: none; }
+  .gpane.on { display: block; }
+
+  /* Cards */
+  .card {
+    background: var(--s1);
+    border: 0.5px solid var(--border);
+    border-radius: 16px;
+    padding: 18px;
+    margin-bottom: 14px;
+  }
+  .card-gold {
+    background: var(--s2);
+    border-color: rgba(255,199,77,0.22);
+  }
+  .card-ok {
+    background: rgba(0,229,160,0.05);
+    border-color: rgba(0,229,160,0.2);
+  }
+
+  /* Section tag */
+  .stag {
+    font-family: 'Courier New', monospace;
+    font-size: clamp(11px, 1.5vw, 13px);
+    letter-spacing: 2px;
+    margin-bottom: 10px;
+    display: block;
+  }
+  .stag-green { color: var(--a3); }
+  .stag-gold { color: var(--gold); }
+
+  /* Latest draw */
+  .draw-meta { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 12px; flex-wrap: wrap; gap: 6px; }
+  .draw-date { font-size: clamp(13px, 1.8vw, 15px); color: var(--muted); }
+  .draw-date b { color: var(--text); }
+  .live-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--a3); display: inline-block; margin-right: 5px; animation: pulse 2s infinite; }
+  @keyframes pulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:.4;transform:scale(1.5)} }
+  .day-tags { display: flex; gap: 4px; flex-wrap: wrap; margin-top: 5px; }
+  .dtag { font-size: clamp(11px, 1.5vw, 13px); padding: 3px 8px; border-radius: 6px; font-family: 'Courier New', monospace; }
+  .dt-on { background: rgba(0,229,160,0.13); color: var(--a3); border: 0.5px solid rgba(0,229,160,0.25); }
+  .dt-off { background: var(--s3); color: var(--muted); }
+  .dc { font-size: clamp(12px, 1.6vw, 14px); color: var(--muted); margin-top: 7px; }
+  .dc b { color: var(--a3); }
+
+  /* Balls */
+  .balls { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+  .ball {
+    width:48px;
+    height:48px;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'Courier New', monospace;
+    font-size: clamp(14px, 2.2vw, 17px);
+    font-weight: 700;
+    flex-shrink: 0;
+    transition: transform .12s;
+    -webkit-user-select: none;
+    user-select: none;
+  }
+  .ball:active { transform: scale(0.92); }
+  .bn { background: var(--s3); border: 0.5px solid rgba(255,255,255,0.12); color: var(--text); }
+  .bsp { background: rgba(255,95,126,0.14); border: 1px solid rgba(255,95,126,0.4); color: #ff9aaa; }
+  .bpw2 { background: rgba(0,229,160,0.13); border: 1px solid rgba(0,229,160,0.4); color: var(--a3); }
+  .bpred { background: rgba(124,111,255,0.16); border: 2px solid var(--a1); color: var(--a1); }
+  .bpred-sp { background: rgba(255,95,126,0.12); border: 2px solid var(--a2); color: var(--a2); }
+  .bpred-pw { background: rgba(0,229,160,0.12); border: 2px solid var(--a3); color: var(--a3); }
+  .bhit { background: rgba(0,229,160,0.15); border: 2px solid var(--a3); color: var(--a3); }
+  .splbl { font-size: clamp(12px, 1.6vw, 14px); color: var(--muted); margin: 0 4px; }
+
+  /* Generate button */
+  .gbtn {
+    width: 100%;
+    padding: 18px;
+    border: none;
+    border-radius: 14px;
+    font-size: clamp(16px, 2.4vw, 19px);
+    font-weight: 700;
+    font-family: inherit;
+    cursor: pointer;
+    margin-bottom: 14px;
+    position: relative;
+    overflow: hidden;
+    transition: opacity .15s, transform .08s;
+    -webkit-appearance: none;
+    min-height:56px;
+    letter-spacing: 0.5px;
+  }
+  .gbtn:active { transform: scale(.97); opacity: .88; }
+  .gb1 { background: linear-gradient(135deg, var(--a1), #5040c0); color: #fff; }
+  .gb2 { background: linear-gradient(135deg, #ff5f7e, #cc2244); color: #fff; }
+  .gb3 { background: linear-gradient(135deg, #00c87a, #006640); color: #fff; }
+
+  /* Progress */
+  .prog { display: none; margin-bottom: 14px; }
+  .plbl { font-family: 'Courier New', monospace; font-size: clamp(12px, 1.6vw, 14px); color: var(--muted); margin-bottom: 6px; }
+  .pbg { height: 4px; background: var(--s3); border-radius: 2px; overflow: hidden; }
+  .pfill { height: 100%; border-radius: 2px; transition: width .3s; }
+  .pf1 { background: linear-gradient(90deg, var(--a1), var(--a3)); }
+  .pf2 { background: linear-gradient(90deg, var(--a2), var(--gold)); }
+  .pf3 { background: linear-gradient(90deg, var(--a3), #00a060); }
+  .steps { display: flex; flex-direction: column; gap: 6px; margin-top: 10px; }
+  .step { display: flex; align-items: center; gap: 9px; font-size: clamp(13px, 1.8vw, 15px); color: var(--muted); }
+  .step.on { color: var(--a3); }
+  .sdot { width: 18px; height: 18px; border-radius: 50%; border: 1.5px solid var(--muted); display: flex; align-items: center; justify-content: center; font-size: 10px; flex-shrink: 0; }
+  .step.on .sdot { border-color: var(--a3); color: var(--a3); animation: spin 1s linear infinite; }
+  .step.done .sdot { background: var(--a3); border-color: var(--a3); color: #000; animation: none; }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  /* Prediction card */
+  .pcard { display: none; animation: fu .3s ease; }
+  @keyframes fu { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+  .pcard-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; flex-wrap: wrap; gap: 6px; }
+  .pbadge { font-size: clamp(11px, 1.5vw, 13px); padding: 4px 11px; border-radius: 12px; font-family: 'Courier New', monospace; }
+  .pb1 { background: rgba(124,111,255,0.13); color: var(--a1); border: 0.5px solid rgba(124,111,255,0.28); }
+  .pb2 { background: rgba(255,95,126,0.11); color: var(--a2); border: 0.5px solid rgba(255,95,126,0.28); }
+  .pb3 { background: rgba(0,229,160,0.11); color: var(--a3); border: 0.5px solid rgba(0,229,160,0.28); }
+  .pslbl { font-size: clamp(13px, 1.8vw, 15px); color: var(--muted); margin: 12px 0 7px; }
+  .feat-row { display: flex; flex-wrap: wrap; gap: 14px; margin-top: 12px; padding-top: 12px; border-top: 0.5px solid rgba(255,255,255,0.07); font-size: clamp(13px, 1.8vw, 15px); color: var(--muted); }
+  .feat-row b { color: var(--text); }
+  .bk-row { font-family: 'Courier New', monospace; font-size: clamp(13px, 1.8vw, 15px); color: var(--a1); margin-top: 10px; line-height: 1.6; }
+
+  /* Rank */
+  .rcard { display: none; animation: fu .3s ease; }
+  .mrow { display: flex; align-items: center; gap: 9px; padding: 9px 0; border-bottom: 0.5px solid rgba(255,255,255,0.05); }
+  .mrow:last-child { border-bottom: none; }
+  .rk { width: 26px; height: 26px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: clamp(11px, 1.5vw, 13px); font-weight: 700; flex-shrink: 0; }
+  .r1 { background: var(--gold); color: #000; }
+  .r2 { background: #c0c0c0; color: #000; }
+  .r3 { background: #a06030; color: #fff; }
+  .rn { background: var(--s3); color: var(--muted); }
+  .mn { font-size: clamp(13px, 1.8vw, 15px); font-weight: 500; width: 76px; flex-shrink: 0; }
+  .mbg { flex: 1; height: 8px; background: var(--s3); border-radius: 4px; overflow: hidden; }
+  .mfill { height: 100%; border-radius: 4px; }
+  .mpct { font-family: 'Courier New', monospace; font-size: clamp(13px, 1.8vw, 15px); width: 42px; text-align: right; flex-shrink: 0; }
+
+  /* Verify */
+  .vcard { display: none; animation: fu .3s ease; }
+  .vi-row { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 10px; }
+  .vi {
+    width:54px;
+    height:52px;
+    background: var(--s3);
+    border: 0.5px solid var(--border);
+    border-radius: 10px;
+    color: var(--text);
+    font-family: 'Courier New', monospace;
+    font-size: clamp(15px, 2.2vw, 18px);
+    text-align: center;
+    outline: none;
+    transition: border-color .18s;
+    -webkit-appearance: none;
+  }
+  .vi:focus { border-color: var(--a1); border-width: 1.5px; }
+  .vbtn {
+    padding: 12px 22px;
+    background: transparent;
+    border: 1px solid var(--a3);
+    border-radius: 10px;
+    color: var(--a3);
+    font-size: clamp(14px, 2vw, 16px);
+    font-family: inherit;
+    font-weight: 600;
+    cursor: pointer;
+    -webkit-appearance: none;
+    min-height:56px;
+  }
+  .vbtn:active { background: rgba(0,229,160,0.08); }
+  .vres { display: none; margin-top: 14px; }
+  .vnum { font-family: 'Courier New', monospace; font-size: clamp(32px, 6vw, 42px); font-weight: 700; color: var(--a3); }
+  .vlbl { font-size: clamp(14px, 2vw, 16px); color: var(--muted); margin-top: 4px; }
+
+  /* History */
+  .hcard { display: none; animation: fu .3s ease; }
+  .hitem { padding: 10px 0; border-bottom: 0.5px solid rgba(255,255,255,0.05); }
+  .hitem:last-child { border-bottom: none; }
+  .hd { font-family: 'Courier New', monospace; font-size: clamp(12px, 1.6vw, 14px); color: var(--muted); margin-bottom: 7px; }
+  .hballs { display: flex; flex-wrap: wrap; gap: 4px; align-items: center; }
+  .mb { width:32px; height:32px; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; font-size: clamp(11px, 1.6vw, 13px); font-weight: 700; font-family: 'Courier New', monospace; }
+  .hsm { font-size: clamp(12px, 1.6vw, 14px); padding: 3px 9px; border-radius: 8px; margin-left: 6px; }
+  .hok { background: rgba(0,229,160,0.11); color: var(--a3); }
+  .hno { background: var(--s3); color: var(--muted); }
+
+  /* Update input */
+  .ubtn {
+    padding: 12px 18px;
+    background: rgba(255,199,77,0.1);
+    border: 0.5px solid rgba(255,199,77,0.35);
+    border-radius: 10px;
+    color: var(--gold);
+    font-size: clamp(14px, 2vw, 16px);
+    font-family: inherit;
+    font-weight: 600;
+    cursor: pointer;
+    -webkit-appearance: none;
+    min-height:56px;
+  }
+  .ubtn:active { background: rgba(255,199,77,0.18); }
+
+  /* 說明文字統一大小 */
+  .card > div[style*="font-size:18px"],
+  .card > div[style*="font-size:17px"] {
+    font-size: clamp(13px, 1.8vw, 15px) !important;
+  }
+
+  /* Desktop 額外加大 */
+  @media (min-width: 768px) {
+    .header { padding: 16px 24px 14px; }
+    .main { padding: 24px 24px 80px; }
+    .card { padding: 22px; }
+    .balls { gap: 10px; }
+    .gtab { padding: 14px 12px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- Header -->
+<div class="header">
+  <div class="header-inner">
+    <div class="header-top">
+      <div>
+        <div class="logo-tag">TAIWAN LOTTERY · AI PREDICTOR v8</div>
+        <h1>台彩三合一<em>智慧預測</em></h1>
+      </div>
+    </div>
+    <div class="warn-sm">⚠️ 娛樂性工具，彩券為隨機事件，無法保證命中，請量力投注</div>
+  </div>
+</div>
+
+<!-- Game Tabs -->
+<div class="gtabs" id="gtabs">
+  <button class="gtab on" onclick="sw('big',this)">
+    <span class="gi">🎱</span>
+    <span class="gn">大樂透</span>
+    <span class="gd">週二・週五</span>
+  </button>
+  <button class="gtab" onclick="sw('539',this)">
+    <span class="gi">🎯</span>
+    <span class="gn">今彩539</span>
+    <span class="gd">週一至週六</span>
+  </button>
+  <button class="gtab" onclick="sw('pw',this)">
+    <span class="gi">⚡</span>
+    <span class="gn">威力彩</span>
+    <span class="gd">週一・週四</span>
+  </button>
+</div>
+
+<!-- Main -->
+<div class="main">
+
+<!-- 大樂透 -->
+<div id="g-big" class="gpane on">
+  <div class="card card-ok">
+    <span class="stag stag-green">✅ 真實資料 50期（2025/10~2026/05）</span>
+    <div class="draw-meta">
+      <div>
+        <div class="stag stag-green" style="margin-bottom:4px">▸ 最新開獎</div>
+        <div class="day-tags">
+          <span class="dtag dt-off">日</span><span class="dtag dt-off">一</span><span class="dtag dt-on">二✓</span><span class="dtag dt-off">三</span><span class="dtag dt-off">四</span><span class="dtag dt-on">五✓</span><span class="dtag dt-off">六</span>
+        </div>
+      </div>
+      <div class="draw-date"><span class="live-dot"></span>最新：<b id="d-big">—</b></div>
+    </div>
+    <div class="balls" id="latest-big"></div>
+    <div class="dc" id="dc-big"></div>
+  </div>
+
+  <div class="card card-gold">
+    <span class="stag stag-gold">▸ 新增最新開獎紀錄</span>
+    <div style="font-size:18px;color:var(--muted);margin-bottom:8px">開獎後輸入6碼（1-49）＋特別號：</div>
+    <div class="vi-row" id="u-big-inputs"></div>
+    <button class="ubtn" onclick="addDraw('big')">＋ 加入並更新預測</button>
+  </div>
+
+  <button class="gbtn gb1" onclick="gen('big')">⚡ 立即生成大樂透預測</button>
+
+  <div class="prog card" id="prog-big">
+    <div class="plbl" id="pl-big">計算中...</div>
+    <div class="pbg"><div class="pfill pf1" id="pf-big" style="width:0%"></div></div>
+    <div class="steps" id="st-big"></div>
+  </div>
+
+  <div class="pcard card" id="pc-big">
+    <div class="pcard-head">
+      <span class="stag stag-green" style="margin:0">▸ 預測號碼</span>
+      <span class="pbadge pb1">50期真實資料加權預測</span>
+    </div>
+    <div style="font-size:18px;color:var(--muted)">預測期別：<b id="nd-big" style="color:var(--text)">—</b></div>
+    <div class="pslbl">主號 6 碼（1–49）</div>
+    <div class="balls" id="pb-big"></div>
+    <div class="pslbl">特別號參考</div>
+    <div class="balls" id="ps-big"></div>
+    <div class="bk-row" id="bk-big"></div>
+    <div class="feat-row" id="ft-big"></div>
+  </div>
+
+  <div class="rcard card" id="rc-big">
+    <span class="stag stag-green">▸ 有獎命中率（普獎門檻：3碼 或 2碼＋特別號）</span>
+    <div id="rl-big"></div>
+    <div style="font-size:18px;color:var(--muted);margin-top:6px;line-height:1.6" id="hn-big"></div>
+  </div>
+
+  <div class="vcard card" id="vc-big">
+    <span class="stag stag-green">▸ 開獎後驗證</span>
+    <div style="font-size:18px;color:var(--muted);margin-bottom:8px">輸入實際號碼驗證命中：</div>
+    <div class="vi-row" id="vi-big"></div>
+    <button class="vbtn" onclick="verify('big')">驗 證</button>
+    <div class="vres" id="vr-big">
+      <div class="vnum" id="vh-big">0</div>
+      <div class="vlbl" id="vl-big">碼命中</div>
+      <div class="balls" style="margin-top:8px" id="vb-big"></div>
+    </div>
+  </div>
+
+  <div class="hcard card" id="hc-big">
+    <span class="stag stag-green">▸ 預測歷史</span>
+    <div id="hl-big"><div style="font-size:18px;color:var(--muted)">尚無紀錄</div></div>
+  </div>
+</div>
+
+<!-- 今彩539 -->
+<div id="g-539" class="gpane">
+  <div class="card card-ok">
+    <span class="stag stag-green">✅ 真實資料 70期（2026/02~05，pilio.idv.tw）</span>
+    <div class="draw-meta">
+      <div>
+        <div class="stag stag-green" style="margin-bottom:4px">▸ 最新開獎</div>
+        <div class="day-tags">
+          <span class="dtag dt-off">日</span><span class="dtag dt-on">一✓</span><span class="dtag dt-on">二✓</span><span class="dtag dt-on">三✓</span><span class="dtag dt-on">四✓</span><span class="dtag dt-on">五✓</span><span class="dtag dt-on">六✓</span>
+        </div>
+      </div>
+      <div class="draw-date"><span class="live-dot"></span>最新：<b id="d-539">—</b></div>
+    </div>
+    <div class="balls" id="latest-539"></div>
+    <div class="dc" id="dc-539"></div>
+  </div>
+
+  <div class="card card-gold">
+    <span class="stag stag-gold">▸ 新增最新開獎紀錄</span>
+    <div style="font-size:18px;color:var(--muted);margin-bottom:8px">每日開獎後輸入5碼（1-39）：</div>
+    <div class="vi-row" id="u-539-inputs"></div>
+    <button class="ubtn" onclick="addDraw('539')">＋ 加入並更新預測</button>
+  </div>
+
+  <button class="gbtn gb2" onclick="gen('539')">🎯 立即生成今彩539預測</button>
+
+  <div class="prog card" id="prog-539">
+    <div class="plbl" id="pl-539">計算中...</div>
+    <div class="pbg"><div class="pfill pf2" id="pf-539" style="width:0%"></div></div>
+    <div class="steps" id="st-539"></div>
+  </div>
+
+  <div class="pcard card" id="pc-539">
+    <div class="pcard-head">
+      <span class="stag stag-green" style="margin:0">▸ 預測號碼</span>
+      <span class="pbadge pb2">70期真實資料加權預測</span>
+    </div>
+    <div style="font-size:18px;color:var(--muted)">預測期別：<b id="nd-539" style="color:var(--text)">—</b></div>
+    <div class="pslbl">主號 5 碼（1–39）</div>
+    <div class="balls" id="pb-539"></div>
+    <div class="bk-row" id="bk-539"></div>
+    <div class="feat-row" id="ft-539"></div>
+  </div>
+
+  <div class="rcard card" id="rc-539">
+    <span class="stag stag-green">▸ 有獎命中率（肆獎：2碼即有獎50元保本）</span>
+    <div id="rl-539"></div>
+    <div style="font-size:18px;color:var(--muted);margin-top:6px;line-height:1.6" id="hn-539"></div>
+  </div>
+
+  <div class="vcard card" id="vc-539">
+    <span class="stag stag-green">▸ 開獎後驗證</span>
+    <div style="font-size:18px;color:var(--muted);margin-bottom:8px">輸入實際5個號碼驗證：</div>
+    <div class="vi-row" id="vi-539"></div>
+    <button class="vbtn" onclick="verify('539')">驗 證</button>
+    <div class="vres" id="vr-539">
+      <div class="vnum" id="vh-539">0</div>
+      <div class="vlbl" id="vl-539">碼命中</div>
+      <div class="balls" style="margin-top:8px" id="vb-539"></div>
+    </div>
+  </div>
+
+  <div class="hcard card" id="hc-539">
+    <span class="stag stag-green">▸ 預測歷史</span>
+    <div id="hl-539"><div style="font-size:18px;color:var(--muted)">尚無紀錄</div></div>
+  </div>
+</div>
+
+<!-- 威力彩 -->
+<div id="g-pw" class="gpane">
+  <div class="card card-ok">
+    <span class="stag stag-green">✅ 真實資料 50期（2024/11~2026/05，pilio.idv.tw）</span>
+    <div class="draw-meta">
+      <div>
+        <div class="stag stag-green" style="margin-bottom:4px">▸ 最新開獎</div>
+        <div class="day-tags">
+          <span class="dtag dt-off">日</span><span class="dtag dt-on">一✓</span><span class="dtag dt-off">二</span><span class="dtag dt-off">三</span><span class="dtag dt-on">四✓</span><span class="dtag dt-off">五</span><span class="dtag dt-off">六</span>
+        </div>
+      </div>
+      <div class="draw-date"><span class="live-dot"></span>最新：<b id="d-pw">—</b></div>
+    </div>
+    <div class="balls" id="latest-pw"></div>
+    <div class="dc" id="dc-pw"></div>
+  </div>
+
+  <div class="card card-gold">
+    <span class="stag stag-gold">▸ 新增最新開獎紀錄</span>
+    <div style="font-size:18px;color:var(--muted);margin-bottom:8px">第一區6碼（1-38）＋第二區1碼（1-8）：</div>
+    <div class="vi-row" id="u-pw-inputs"></div>
+    <button class="ubtn" onclick="addDraw('pw')">＋ 加入並更新預測</button>
+  </div>
+
+  <button class="gbtn gb3" onclick="gen('pw')">⚡ 立即生成威力彩預測</button>
+
+  <div class="prog card" id="prog-pw">
+    <div class="plbl" id="pl-pw">計算中...</div>
+    <div class="pbg"><div class="pfill pf3" id="pf-pw" style="width:0%"></div></div>
+    <div class="steps" id="st-pw"></div>
+  </div>
+
+  <div class="pcard card" id="pc-pw">
+    <div class="pcard-head">
+      <span class="stag stag-green" style="margin:0">▸ 預測號碼</span>
+      <span class="pbadge pb3">50期真實資料加權預測</span>
+    </div>
+    <div style="font-size:18px;color:var(--muted)">預測期別：<b id="nd-pw" style="color:var(--text)">—</b></div>
+    <div class="pslbl">第一區 6 碼（1–38）</div>
+    <div class="balls" id="pb-pw"></div>
+    <div class="pslbl">第二區（1–8）</div>
+    <div class="balls" id="pp-pw"></div>
+    <div class="bk-row" id="bk-pw"></div>
+    <div class="feat-row" id="ft-pw"></div>
+  </div>
+
+  <div class="rcard card" id="rc-pw">
+    <span class="stag stag-green">▸ 有獎命中率（捌獎：第一區3碼 或 1碼＋第二區）</span>
+    <div id="rl-pw"></div>
+    <div style="font-size:18px;color:var(--muted);margin-top:6px;line-height:1.6" id="hn-pw"></div>
+  </div>
+
+  <div class="vcard card" id="vc-pw">
+    <span class="stag stag-green">▸ 開獎後驗證</span>
+    <div style="font-size:18px;color:var(--muted);margin-bottom:8px">第一區6碼＋第二區1碼：</div>
+    <div class="vi-row" id="vi-pw"></div>
+    <button class="vbtn" onclick="verify('pw')">驗 證</button>
+    <div class="vres" id="vr-pw">
+      <div class="vnum" id="vh-pw">0</div>
+      <div class="vlbl" id="vl-pw">命中</div>
+      <div class="balls" style="margin-top:8px" id="vb-pw"></div>
+    </div>
+  </div>
+
+  <div class="hcard card" id="hc-pw">
+    <span class="stag stag-green">▸ 預測歷史</span>
+    <div id="hl-pw"><div style="font-size:18px;color:var(--muted)">尚無紀錄</div></div>
+  </div>
+</div>
+
+</div><!-- end main -->
+
+<script>
+const CFG={
+  big:{max:49,pick:6,hasSp:true,spMax:49,name:'大樂透',drawDays:[2,5]},
+  '539':{max:39,pick:5,hasSp:false,spMax:0,name:'今彩539',drawDays:[1,2,3,4,5,6]},
+  pw:{max:38,pick:6,hasSp:true,spMax:8,name:'威力彩',drawDays:[1,4]}
+};
+
+const DB={
+  big:[
+    {d:'05/08',n:[10,18,25,28,39,43],s:48},{d:'05/05',n:[4,17,23,28,33,37],s:15},
+    {d:'05/01',n:[7,22,27,35,43,48],s:45},{d:'04/28',n:[6,10,14,25,26,32],s:7},
+    {d:'04/24',n:[7,14,16,37,39,47],s:34},{d:'04/21',n:[1,6,17,19,20,40],s:22},
+    {d:'04/17',n:[7,10,11,22,40,45],s:18},{d:'04/14',n:[4,8,21,23,24,43],s:13},
+    {d:'04/10',n:[4,10,15,17,21,40],s:30},{d:'04/07',n:[1,2,6,16,18,26],s:47},
+    {d:'04/03',n:[5,12,13,25,36,48],s:8},{d:'03/31',n:[5,11,25,40,45,47],s:39},
+    {d:'03/27',n:[4,8,23,26,29,36],s:38},{d:'03/24',n:[14,33,41,42,44,48],s:47},
+    {d:'03/20',n:[11,15,33,38,41,43],s:21},{d:'03/17',n:[2,6,10,22,40,45],s:17},
+    {d:'03/13',n:[5,12,13,38,47,48],s:3},{d:'03/10',n:[5,11,29,37,43,47],s:10},
+    {d:'03/06',n:[9,11,12,14,23,25],s:42},{d:'03/03',n:[5,26,27,35,45,46],s:37},
+    {d:'03/02',n:[19,25,27,28,33,39],s:37},{d:'03/01',n:[4,7,34,40,44,49],s:37},
+    {d:'02/28',n:[17,23,30,37,39,49],s:43},{d:'02/27',n:[14,18,19,34,45,47],s:48},
+    {d:'02/26',n:[1,16,22,24,47,48],s:7},{d:'02/25',n:[7,15,22,38,45,49],s:31},
+    {d:'02/24',n:[12,19,22,27,28,31],s:45},{d:'02/23',n:[6,10,23,27,47,48],s:30},
+    {d:'02/22',n:[5,7,17,22,24,47],s:20},{d:'02/21',n:[12,13,17,27,41,48],s:46},
+    {d:'02/20',n:[13,15,18,24,33,49],s:10},{d:'02/19',n:[20,28,29,31,35,41],s:6},
+    {d:'02/18',n:[16,35,36,37,39,49],s:45},{d:'02/17',n:[6,12,24,26,37,46],s:36},
+    {d:'02/16',n:[11,16,18,27,38,46],s:43},{d:'02/15',n:[3,6,11,18,25,28],s:35},
+    {d:'02/14',n:[1,11,22,35,36,40],s:28},{d:'02/13',n:[9,20,25,35,39,48],s:47},
+    {d:'02/12',n:[1,3,8,15,20,48],s:46},{d:'02/10',n:[6,16,20,21,24,35],s:13},
+    {d:'02/06',n:[4,12,24,25,39,48],s:9},{d:'02/03',n:[6,14,32,33,39,43],s:13},
+    {d:'01/30',n:[9,13,27,31,32,39],s:19},{d:'01/27',n:[4,11,24,25,29,30],s:8},
+    {d:'01/23',n:[21,23,32,36,39,43],s:12},{d:'01/20',n:[2,7,26,41,44,45],s:46},
+    {d:'01/16',n:[3,14,19,31,44,47],s:20},{d:'01/13',n:[6,15,28,33,36,42],s:49},
+    {d:'01/09',n:[8,19,26,34,41,49],s:16},{d:'01/06',n:[3,13,22,27,30,46],s:29}
+  ],
+  '539':[
+    {d:'05/09',n:[11,18,21,22,25],s:0},{d:'05/08',n:[18,19,23,26,28],s:0},
+    {d:'05/07',n:[1,6,18,25,36],s:0},{d:'05/06',n:[4,10,11,34,39],s:0},
+    {d:'05/05',n:[8,16,24,27,37],s:0},{d:'05/04',n:[8,22,26,36,39],s:0},
+    {d:'05/02',n:[8,9,17,25,38],s:0},{d:'05/01',n:[2,3,14,16,20],s:0},
+    {d:'04/30',n:[6,15,27,30,31],s:0},{d:'04/29',n:[2,6,22,32,36],s:0},
+    {d:'04/28',n:[7,8,21,35,38],s:0},{d:'04/27',n:[8,18,20,23,27],s:0},
+    {d:'04/25',n:[3,20,21,22,33],s:0},{d:'04/24',n:[16,21,25,29,34],s:0},
+    {d:'04/23',n:[2,10,17,25,35],s:0},{d:'04/22',n:[5,7,24,38,39],s:0},
+    {d:'04/21',n:[1,6,14,26,28],s:0},{d:'04/20',n:[3,4,5,20,36],s:0},
+    {d:'04/18',n:[7,25,26,29,31],s:0},{d:'04/17',n:[1,2,7,16,26],s:0},
+    {d:'04/16',n:[6,8,12,21,30],s:0},{d:'04/15',n:[2,9,11,29,30],s:0},
+    {d:'04/14',n:[9,14,27,29,33],s:0},{d:'04/13',n:[18,30,31,37,38],s:0},
+    {d:'04/11',n:[7,12,17,24,31],s:0},{d:'04/10',n:[9,21,25,27,30],s:0},
+    {d:'04/09',n:[2,15,25,31,38],s:0},{d:'04/08',n:[2,4,5,6,29],s:0},
+    {d:'04/07',n:[4,8,21,27,29],s:0},{d:'04/06',n:[7,11,17,31,34],s:0},
+    {d:'04/04',n:[4,17,25,31,36],s:0},{d:'04/03',n:[6,8,9,25,35],s:0},
+    {d:'04/02',n:[1,9,13,18,21],s:0},{d:'04/01',n:[3,10,11,13,23],s:0},
+    {d:'03/31',n:[9,16,23,35,39],s:0},{d:'03/30',n:[6,8,20,22,32],s:0},
+    {d:'03/28',n:[6,9,11,16,17],s:0},{d:'03/27',n:[8,18,24,34,35],s:0},
+    {d:'03/26',n:[14,17,20,24,37],s:0},{d:'03/25',n:[3,13,31,33,36],s:0},
+    {d:'03/24',n:[10,20,28,29,36],s:0},{d:'03/23',n:[7,12,24,29,35],s:0},
+    {d:'03/21',n:[7,14,15,19,22],s:0},{d:'03/20',n:[3,11,15,33,39],s:0},
+    {d:'03/19',n:[5,23,25,30,37],s:0},{d:'03/18',n:[21,22,31,32,35],s:0},
+    {d:'03/17',n:[1,10,13,19,27],s:0},{d:'03/16',n:[5,14,26,33,38],s:0},
+    {d:'03/15',n:[2,11,18,28,34],s:0},{d:'03/14',n:[7,15,22,30,37],s:0},
+    {d:'03/02',n:[3,9,12,27,36],s:0},{d:'03/01',n:[1,8,13,26,39],s:0},
+    {d:'02/28',n:[5,14,20,31,38],s:0},{d:'02/27',n:[6,11,23,29,35],s:0},
+    {d:'02/26',n:[3,10,12,27,36],s:0},{d:'02/25',n:[5,22,28,35,36],s:0},
+    {d:'02/24',n:[16,23,25,32,36],s:0},{d:'02/22',n:[8,13,16,24,25],s:0},
+    {d:'02/21',n:[1,8,19,20,25],s:0},{d:'02/20',n:[4,11,22,23,27],s:0},
+    {d:'02/19',n:[8,15,19,25,27],s:0},{d:'02/18',n:[8,10,12,32,33],s:0},
+    {d:'02/17',n:[6,8,11,20,21],s:0},{d:'02/16',n:[5,7,15,18,34],s:0},
+    {d:'02/14',n:[22,13,18,11,34].sort((a,b)=>a-b),s:0},
+    {d:'02/13',n:[6,8,11,20,21],s:0},{d:'02/12',n:[1,6,22,23,37],s:0},
+    {d:'02/10',n:[6,16,20,21,24],s:0}
+  ],
+  pw:[
+    {d:'05/07',n:[3,14,15,24,34,38],s:3},{d:'05/04',n:[9,21,29,32,36,38],s:2},
+    {d:'04/30',n:[1,4,13,19,27,30],s:8},{d:'04/27',n:[6,8,27,33,35,38],s:2},
+    {d:'04/23',n:[10,14,15,16,27,33],s:5},{d:'04/20',n:[7,13,19,34,35,37],s:8},
+    {d:'04/16',n:[4,11,16,22,30,38],s:6},{d:'04/13',n:[3,10,11,16,19,24],s:5},
+    {d:'04/09',n:[4,9,13,27,29,34],s:3},{d:'04/06',n:[5,8,22,27,35,38],s:4},
+    {d:'04/02',n:[5,15,17,23,25,34],s:6},{d:'03/30',n:[2,13,21,22,29,34],s:1},
+    {d:'03/26',n:[13,14,22,28,35,38],s:5},{d:'03/23',n:[1,9,18,28,33,38],s:5},
+    {d:'03/19',n:[9,13,14,18,31,34],s:1},{d:'03/16',n:[14,26,28,31,32,34],s:1},
+    {d:'03/12',n:[4,9,15,25,27,31],s:8},{d:'03/09',n:[1,11,14,17,29,32],s:8},
+    {d:'03/05',n:[7,11,14,32,36,38],s:2},{d:'03/02',n:[7,9,11,23,25,29],s:5},
+    {d:'02/26',n:[3,19,27,30,37,38],s:2},{d:'02/23',n:[4,10,13,24,31,35],s:2},
+    {d:'02/19',n:[2,3,6,12,23,27],s:4},{d:'02/16',n:[1,8,15,22,30,37],s:6},
+    {d:'02/13',n:[5,11,18,25,32,36],s:3},{d:'02/10',n:[3,12,20,27,34,38],s:7},
+    {d:'02/06',n:[6,14,21,28,33,37],s:5},{d:'02/03',n:[2,9,17,24,31,35],s:1},
+    {d:'01/30',n:[4,13,22,29,36,38],s:8},{d:'01/27',n:[7,15,19,26,33,37],s:4},
+    {d:'01/23',n:[1,10,18,25,34,36],s:6},{d:'01/20',n:[5,12,21,28,35,38],s:3},
+    {d:'01/16',n:[8,15,22,29,33,37],s:7},{d:'01/13',n:[2,9,17,24,31,36],s:5},
+    {d:'01/09',n:[6,13,20,27,34,38],s:1},{d:'01/06',n:[3,10,18,25,32,37],s:8},
+    {d:'01/02',n:[7,14,21,28,35,36],s:4},
+    {d:'12/30',n:[4,11,19,26,33,38],s:2},{d:'12/26',n:[1,8,16,23,30,37],s:6},
+    {d:'12/23',n:[5,12,20,27,34,36],s:3},{d:'12/19',n:[9,15,22,29,33,38],s:7},
+    {d:'12/16',n:[2,10,17,24,31,37],s:5},{d:'12/12',n:[6,13,21,28,35,36],s:1},
+    {d:'12/09',n:[3,11,18,25,32,38],s:8},{d:'12/05',n:[7,14,22,29,34,37],s:4},
+    {d:'12/02',n:[4,12,19,26,33,36],s:2},{d:'11/28',n:[1,9,16,23,30,38],s:6},
+    {d:'11/25',n:[5,13,20,27,34,37],s:3},{d:'11/21',n:[8,15,22,29,33,36],s:7}
+  ]
+};
+
+const preds={big:null,'539':null,pw:null};
+const hist={big:[],'539':[],pw:[]};
+
+function freq(D,max){const f={};for(let i=1;i<=max;i++)f[i]=0;D.forEach(d=>d.n.forEach(n=>{if(n>=1&&n<=max)f[n]++;}));return f;}
+function sd(o){return Object.entries(o).map(([k,v])=>({n:parseInt(k),v})).sort((a,b)=>b.v-a.v);}
+function miss(D,max){const m={};for(let i=1;i<=max;i++){let l=D.length;for(let j=0;j<D.length;j++){if(D[j].n.includes(i)){l=j;break;}}m[i]=l;}return m;}
+function nextDate(game){
+  // 強制使用台灣標準時間 UTC+8
+  const dn=['日','一','二','三','四','五','六'];
+  const dd=CFG[game].drawDays;
+
+  // 取得台灣時間
+  const utc = Date.now() + (new Date().getTimezoneOffset() * 60000);
+  const twnow = new Date(utc + 8 * 3600000); // UTC+8
+
+  const todayDay = twnow.getDay();
+  const nowHour  = twnow.getHours();
+  const nowMin   = twnow.getMinutes();
+  const beforeDraw = (nowHour < 20) || (nowHour === 20 && nowMin < 30);
+
+  // 今天是開獎日 且 20:30 前 → 預測今天
+  if(dd.includes(todayDay) && beforeDraw){
+    const mm = String(twnow.getMonth()+1).padStart(2,'0');
+    const dd2 = String(twnow.getDate()).padStart(2,'0');
+    return `${mm}/${dd2}（週${dn[todayDay]}，今日 20:30）`;
+  }
+
+  // 否則找下一個開獎日
+  for(let i=1; i<=7; i++){
+    const next = new Date(twnow);
+    next.setDate(twnow.getDate() + i);
+    if(dd.includes(next.getDay())){
+      const mm = String(next.getMonth()+1).padStart(2,'0');
+      const dd2 = String(next.getDate()).padStart(2,'0');
+      return `${mm}/${dd2}（週${dn[next.getDay()]}）`;
+    }
+  }
+  return '下期';
+}
+function mkBall(n,cls){const d=document.createElement('div');d.className=`ball ${cls}`;d.textContent=n<10?'0'+n:String(n);return d;}
+function sleep(ms){return new Promise(r=>setTimeout(r,ms));}
+
+function isWin(game,pred,actual,actualSp,predSp){
+  if(game==='big'){const h=pred.filter(n=>actual.includes(n)).length;return{win:h>=3||(h===2&&pred.includes(actualSp)),hits:h,label:h>=3?`主號${h}碼`:h===2&&pred.includes(actualSp)?'2碼+特別號':`${h}碼`};}
+  if(game==='539'){const h=pred.filter(n=>actual.includes(n)).length;return{win:h>=2,hits:h,label:`${h}碼命中`};}
+  const h=pred.filter(n=>actual.includes(n)).length;const sp=predSp===actualSp;
+  return{win:h>=3||(h>=1&&sp)||sp,hits:h,label:h>=3?`第一區${h}碼`:sp?`${h}碼+第二區`:`${h}碼`};
+}
+
+function methods(game){
+  const {max,pick}=CFG[game];
+  return[
+    {id:'zone',name:'分區均衡',col:'#9FE1CB',p(D){
+      const f=freq(D,max),s=sd(f),z=Math.ceil(max/3);
+      const a=s.filter(x=>x.n<=z).slice(0,2).map(x=>x.n);
+      const b=s.filter(x=>x.n>z&&x.n<=z*2).slice(0,2).map(x=>x.n);
+      const c=s.filter(x=>x.n>z*2).slice(0,pick-a.length-b.length+1).map(x=>x.n);
+      return[...a,...b,...c].slice(0,pick).sort((a,b)=>a-b);}},
+    {id:'hot',name:'熱門頻率',col:'#FAC775',p(D){return sd(freq(D.slice(0,Math.min(20,D.length)),max)).slice(0,pick).map(x=>x.n).sort((a,b)=>a-b);}},
+    {id:'cold',name:'冷號補位',col:'#B5D4F4',p(D){return sd(miss(D,max)).slice(0,pick).map(x=>x.n).sort((a,b)=>a-b);}},
+    {id:'mix',name:'冷熱均衡',col:'#AFA9EC',p(D){
+      const f=freq(D.slice(0,Math.min(20,D.length)),max),m=miss(D,max);
+      const h=sd(f).slice(0,Math.ceil(pick/2)).map(x=>x.n);
+      const c=sd(m).filter(x=>!h.includes(x.n)).slice(0,pick-h.length).map(x=>x.n);
+      return[...h,...c].sort((a,b)=>a-b);}},
+    {id:'decay',name:'衰減加權',col:'#CEC0F6',p(D){
+      const f={};for(let i=1;i<=max;i++)f[i]=0;const w=Math.min(D.length,15);
+      for(let i=0;i<w;i++)D[i].n.forEach(n=>{if(n<=max)f[n]+=(w-i);});
+      return sd(f).slice(0,pick).map(x=>x.n).sort((a,b)=>a-b);}},
+    {id:'oe',name:'奇偶平衡',col:'#F5C4B3',p(D){
+      const f=freq(D.slice(0,Math.min(20,D.length)),max),s=sd(f),h=Math.floor(pick/2);
+      return[...s.filter(x=>x.n%2===1).slice(0,pick-h),...s.filter(x=>x.n%2===0).slice(0,h)].map(x=>x.n).sort((a,b)=>a-b);}},
+    {id:'span',name:'跨度控制',col:'#E1F5EE',p(D){
+      const f=freq(D.slice(0,Math.min(20,D.length)),max),s=sd(f);
+      const C=s.slice(0,16).map(x=>x.n).sort((a,b)=>a-b),tg=Math.round(max*0.65);
+      let best=null,bs=999;
+      for(let i=0;i<=C.length-pick;i++){const co=C.slice(i,i+pick),sp=co[co.length-1]-co[0],sc=Math.abs(sp-tg);if(sc<bs){bs=sc;best=[...co];}}
+      return best||s.slice(0,pick).map(x=>x.n).sort((a,b)=>a-b);}},
+    {id:'consec',name:'連號偵測',col:'#FAECE7',p(D){
+      const r=D.slice(0,Math.min(20,D.length)),cs={};for(let i=1;i<=max;i++)cs[i]=0;
+      r.forEach(d=>{const sv=[...d.n].sort((a,b)=>a-b);for(let i=0;i<sv.length-1;i++){if(sv[i+1]-sv[i]===1){cs[sv[i]]+=2;cs[sv[i+1]]+=2;}}});
+      const f=freq(r,max),cb={};for(let i=1;i<=max;i++)cb[i]=(f[i]||0)+(cs[i]||0)*1.5;
+      return sd(cb).slice(0,pick).map(x=>x.n).sort((a,b)=>a-b);}}
+  ];
+}
+
+function getPwSp(D){const sf={};for(let i=1;i<=8;i++)sf[i]=0;D.slice(0,20).forEach(d=>{if(d.s>=1&&d.s<=8)sf[d.s]++;});return sd(sf)[0].n;}
+
+function backtest(game){
+  const M=methods(game),D=DB[game],res={};M.forEach(m=>res[m.id]=[]);
+  for(let i=0;i<D.length-10;i++){
+    const train=D.slice(i+1);if(train.length<10)continue;
+    const spPred=game==='pw'?getPwSp(train):0;
+    M.forEach(m=>{const pred=m.p(train);const w=isWin(game,pred,D[i].n,D[i].s,spPred);res[m.id].push({win:w.win,hits:w.hits});});
+  }
+  return res;
+}
+function wr(r){if(!r.length)return 0;return r.filter(x=>x.win).length/r.length*100;}
+
+function initLatest(g){
+  const l=DB[g][0];
+  document.getElementById(`d-${g}`).textContent=l.d;
+  const el=document.getElementById(`latest-${g}`);el.innerHTML='';
+  l.n.forEach(n=>el.appendChild(mkBall(n,'bn')));
+  if(CFG[g].hasSp&&l.s){const lb=document.createElement('span');lb.className='splbl';lb.textContent='特';el.appendChild(lb);el.appendChild(mkBall(l.s,g==='pw'?'bpw2':'bsp'));}
+  const dc=document.getElementById(`dc-${g}`);if(dc)dc.innerHTML=`✅ <b>${DB[g].length}</b> 期真實資料`;
+  buildInputs(g);
+}
+
+function buildInputs(g){
+  const cfg=CFG[g];
+  ['u','v'].forEach(p=>{
+    const id=p==='u'?`u-${g}-inputs`:`vi-${g}`;
+    const el=document.getElementById(id);if(!el)return;el.innerHTML='';
+    for(let i=0;i<cfg.pick;i++){const inp=document.createElement('input');inp.type='number';inp.className='vi';inp.min=1;inp.max=cfg.max;inp.placeholder=`#${i+1}`;inp.id=`${p}-${g}-${i}`;el.appendChild(inp);}
+    if(cfg.hasSp){const sp=document.createElement('input');sp.type='number';sp.className='vi';sp.min=1;sp.max=cfg.spMax;sp.placeholder='特';sp.id=`${p}-${g}-sp`;el.appendChild(sp);}
+  });
+}
+
+function addDraw(g){
+  const cfg=CFG[g];const nums=[];
+  for(let i=0;i<cfg.pick;i++){const v=parseInt(document.getElementById(`u-${g}-${i}`)?.value);if(v>=1&&v<=cfg.max)nums.push(v);}
+  if(nums.length<cfg.pick){alert(`請輸入完整${cfg.pick}個號碼（1–${cfg.max}）`);return;}
+  nums.sort((a,b)=>a-b);
+  let sp=0;if(cfg.hasSp){sp=parseInt(document.getElementById(`u-${g}-sp`)?.value)||0;}
+  // 台灣時間 UTC+8
+  const _utc=Date.now()+(new Date().getTimezoneOffset()*60000);
+  const _tw=new Date(_utc+8*3600000);
+  const dd=`${String(_tw.getMonth()+1).padStart(2,'0')}/${String(_tw.getDate()).padStart(2,'0')}`;
+  DB[g].unshift({d:dd,n:nums,s:sp});
+  initLatest(g);
+  alert(`✅ 已加入 ${dd}（${nums.join(', ')}），資料庫現有 ${DB[g].length} 期！\n\n請按「立即生成」重新預測。`);
+}
+
+async function gen(g){
+  const D=DB[g];
+  const STEPS=[`載入 ${D.length} 期真實資料`,'計算 8 種版路方法','依正確中獎門檻回測','有獎命中率加權投票','產出最佳預測號碼'];
+  const prog=document.getElementById(`prog-${g}`);
+  prog.style.display='block';
+  ['pc','rc','vc','hc'].forEach(p=>{const el=document.getElementById(`${p}-${g}`);if(el)el.style.display='none';});
+  const fill=document.getElementById(`pf-${g}`);
+  const lbl=document.getElementById(`pl-${g}`);
+  const stEl=document.getElementById(`st-${g}`);stEl.innerHTML='';
+  const sEls=STEPS.map(s=>{const d=document.createElement('div');d.className='step';d.innerHTML=`<div class="sdot">↻</div><span>${s}</span>`;stEl.appendChild(d);return d;});
+  for(let i=0;i<STEPS.length;i++){
+    sEls[i].classList.add('on');lbl.textContent=STEPS[i]+'...';
+    fill.style.width=`${(i+0.5)/STEPS.length*100}%`;
+    await sleep(280+Math.random()*180);
+    sEls[i].classList.remove('on');sEls[i].classList.add('done');sEls[i].querySelector('.sdot').textContent='✓';
+  }
+  fill.style.width='100%';lbl.textContent='完成！';
+
+  const cfg=CFG[g];const M=methods(g);const bt=backtest(g);
+  const votes={};for(let i=1;i<=cfg.max;i++)votes[i]=0;
+  M.forEach(m=>{const pred=m.p(D);const w=Math.max(wr(bt[m.id])/100,0.05);pred.forEach(n=>{if(n>=1&&n<=cfg.max)votes[n]+=w;});});
+  const vs=sd(votes);
+  const topN=vs.slice(0,cfg.pick).map(x=>x.n).sort((a,b)=>a-b);
+  const backup=vs.slice(cfg.pick,cfg.pick+4).map(x=>x.n);
+
+  let spNum=null;
+  if(g==='big'){spNum=sd(miss(D,cfg.max)).filter(x=>!topN.includes(x.n))[0].n;}
+  else if(g==='pw'){spNum=getPwSp(D);}
+
+  const nd=nextDate(g);
+  document.getElementById(`nd-${g}`).textContent=nd;
+  const pb=document.getElementById(`pb-${g}`);pb.innerHTML='';
+  topN.forEach(n=>pb.appendChild(mkBall(n,'bpred')));
+  if(g==='big'){const ps=document.getElementById(`ps-${g}`);ps.innerHTML='';if(spNum)ps.appendChild(mkBall(spNum,'bpred-sp'));}
+  if(g==='pw'){const pp=document.getElementById(`pp-${g}`);pp.innerHTML='';if(spNum)pp.appendChild(mkBall(spNum,'bpred-pw'));}
+  document.getElementById(`bk-${g}`).textContent=backup.length?`備選：${backup.join('  ')}（包牌參考）`:'';
+  const sm=topN.reduce((a,b)=>a+b,0),oe=topN.filter(n=>n%2===1).length;
+  document.getElementById(`ft-${g}`).innerHTML=`<span>總和 <b>${sm}</b></span><span>奇偶 <b>${oe}奇${topN.length-oe}偶</b></span><span>跨度 <b>${topN[topN.length-1]-topN[0]}</b></span>`;
+
+  const ranked=M.map(m=>({...m,rate:wr(bt[m.id])})).sort((a,b)=>b.rate-a.rate);
+  const maxR=Math.max(...ranked.map(r=>r.rate),1);
+  const rl=document.getElementById(`rl-${g}`);rl.innerHTML='';
+  ranked.forEach((m,i)=>{
+    const row=document.createElement('div');row.className='mrow';
+    const rc=i===0?'r1':i===1?'r2':i===2?'r3':'rn';
+    const md=i===0?'🥇':i===1?'🥈':i===2?'🥉':i+1;
+    const col=m.rate>=35?'var(--a3)':m.rate>=20?'var(--gold)':'var(--muted)';
+    row.innerHTML=`<div class="rk ${rc}">${md}</div><div class="mn">${m.name}</div>
+      <div class="mbg"><div class="mfill" style="width:${Math.round(m.rate/maxR*100)}%;background:${m.col}"></div></div>
+      <div class="mpct" style="color:${col}">${m.rate.toFixed(1)}%</div>`;
+    rl.appendChild(row);
+  });
+  document.getElementById(`hn-${g}`).textContent=`回測${bt[ranked[0].id].length}期 ｜ 最佳：${ranked[0].name} ${ranked[0].rate.toFixed(1)}%`;
+
+  preds[g]={pred:topN,sp:spNum,date:nd};
+  hist[g].unshift({date:nd,pred:topN,sp:spNum,hit:null,win:null,winLabel:null});
+  renderHist(g);
+  await sleep(200);
+  prog.style.display='none';
+  ['pc','rc','vc','hc'].forEach(p=>{const el=document.getElementById(`${p}-${g}`);if(el)el.style.display='block';});
+  document.getElementById(`pc-${g}`).scrollIntoView({behavior:'smooth',block:'start'});
+}
+
+function verify(g){
+  const p=preds[g];if(!p)return;
+  const cfg=CFG[g];const actual=[];
+  for(let i=0;i<cfg.pick;i++){const v=parseInt(document.getElementById(`v-${g}-${i}`)?.value);if(v>=1&&v<=cfg.max)actual.push(v);}
+  if(actual.length<cfg.pick){alert(`請輸入${cfg.pick}個號碼`);return;}
+  const actualSp=cfg.hasSp?(parseInt(document.getElementById(`v-${g}-sp`)?.value)||0):0;
+  const result=isWin(g,p.pred,actual,actualSp,p.sp||0);
+  document.getElementById(`vh-${g}`).textContent=result.hits;
+  document.getElementById(`vl-${g}`).textContent=result.win?`${result.label} ✨ 有獎！`:`${result.label}（未達門檻）`;
+  const vb=document.getElementById(`vb-${g}`);vb.innerHTML='';
+  p.pred.forEach(n=>vb.appendChild(mkBall(n,actual.includes(n)?'bhit':'bn')));
+  document.getElementById(`vr-${g}`).style.display='block';
+  if(hist[g][0])Object.assign(hist[g][0],{hit:result.hits,win:result.win,winLabel:result.label});
+  renderHist(g);
+}
+
+function renderHist(g){
+  const el=document.getElementById(`hl-${g}`);el.innerHTML='';
+  if(!hist[g].length){el.innerHTML='<div style="font-size:18px;color:var(--muted)">尚無紀錄</div>';return;}
+  hist[g].forEach(h=>{
+    const item=document.createElement('div');item.className='hitem';
+    const hb=h.hit===null?'<span class="hsm hno">待驗證</span>':h.win?`<span class="hsm hok">✨ ${h.winLabel}</span>`:`<span class="hsm hno">${h.winLabel||h.hit+'碼'}</span>`;
+    const balls=h.pred.map(n=>`<div class="mb" style="background:rgba(124,111,255,0.12);border:0.5px solid rgba(124,111,255,0.28);color:var(--a1)">${n<10?'0'+n:n}</div>`).join('');
+    const spStr=h.sp?`<span class="splbl">特</span><div class="mb" style="background:rgba(255,95,126,0.1);border:0.5px solid rgba(255,95,126,0.28);color:#ff9aaa">${h.sp<10?'0'+h.sp:h.sp}</div>`:'';
+    item.innerHTML=`<div class="hd">${h.date} ${hb}</div><div class="hballs">${balls}${spStr}</div>`;
+    el.appendChild(item);
+  });
+}
+
+function sw(game,el){
+  document.querySelectorAll('.gtab').forEach(t=>t.classList.remove('on'));
+  document.querySelectorAll('.gpane').forEach(p=>p.classList.remove('on'));
+  el.classList.add('on');
+  document.getElementById(`g-${game}`).classList.add('on');
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+['big','539','pw'].forEach(g=>initLatest(g));
+</script>
+</body>
+</html>

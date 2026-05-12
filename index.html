@@ -8,6 +8,7 @@
 <meta name="theme-color" content="#09090f">
 <title>台彩三合一智慧預測</title>
 <style>
+
   :root {
     --bg: #09090f;
     --s1: #111120;
@@ -304,16 +305,55 @@
     .balls { gap: 10px; }
     .gtab { padding: 14px 12px; }
   }
+
+  /* 預測紀錄資料庫 */
+  .db-panel{display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.85);z-index:999;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:16px;}
+  .db-inner{background:var(--s1);border-radius:18px;max-width:760px;margin:0 auto;padding:20px;min-height:80vh;}
+  .db-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;flex-wrap:wrap;gap:8px;}
+  .db-title{font-size:22px;font-weight:700;}
+  .db-close{padding:10px 18px;background:var(--s3);border:none;border-radius:10px;color:var(--text);font-size:16px;cursor:pointer;-webkit-appearance:none;}
+  .db-tabs{display:flex;gap:6px;margin-bottom:16px;flex-wrap:wrap;}
+  .db-tab{padding:10px 16px;background:var(--s2);border:0.5px solid var(--border);border-radius:10px;cursor:pointer;font-size:15px;color:var(--muted);-webkit-appearance:none;border:none;}
+  .db-tab.on{background:var(--a1);color:#fff;font-weight:600;}
+  .db-list{display:flex;flex-direction:column;gap:10px;}
+  .db-item{background:var(--s2);border:0.5px solid var(--border);border-radius:12px;padding:14px;}
+  .db-item-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;flex-wrap:wrap;gap:6px;}
+  .db-date{font-family:'Courier New',monospace;font-size:16px;font-weight:600;color:var(--a3);}
+  .db-win{font-size:14px;padding:4px 12px;border-radius:8px;}
+  .db-win-ok{background:rgba(0,229,160,0.15);color:var(--a3);}
+  .db-win-no{background:var(--s3);color:var(--muted);}
+  .db-win-pending{background:rgba(255,199,77,0.12);color:var(--gold);}
+  .db-balls{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:8px;align-items:center;}
+  .db-ball{width:40px;height:40px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:'Courier New',monospace;font-size:14px;font-weight:700;}
+  .db-ball-pred{background:rgba(124,111,255,0.14);border:1.5px solid var(--a1);color:var(--a1);}
+  .db-ball-hit{background:rgba(0,229,160,0.15);border:2px solid var(--a3);color:var(--a3);}
+  .db-ball-miss{background:var(--s3);border:0.5px solid rgba(255,255,255,0.1);color:var(--muted);}
+  .db-ball-actual{background:rgba(255,95,126,0.12);border:1.5px solid var(--a2);color:var(--a2);}
+  .db-actual-row{font-size:14px;color:var(--muted);margin-top:6px;}
+  .db-actual-row b{color:var(--text);}
+  .db-verify-row{margin-top:8px;display:flex;gap:5px;flex-wrap:wrap;align-items:center;}
+  .db-vi{width:46px;height:40px;background:var(--s3);border:0.5px solid var(--border);border-radius:8px;color:var(--text);font-family:'Courier New',monospace;font-size:15px;text-align:center;outline:none;-webkit-appearance:none;}
+  .db-vi:focus{border-color:var(--a1);}
+  .db-vbtn{padding:8px 16px;background:transparent;border:1px solid var(--a3);border-radius:8px;color:var(--a3);font-size:14px;cursor:pointer;-webkit-appearance:none;min-height:40px;}
+  .db-empty{text-align:center;color:var(--muted);font-size:16px;padding:40px 0;}
+  .db-stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:10px;margin-bottom:16px;}
+  .db-stat{background:var(--s2);border-radius:12px;padding:12px;text-align:center;}
+  .db-stat-val{font-size:26px;font-weight:700;color:var(--a3);font-family:'Courier New',monospace;}
+  .db-stat-lbl{font-size:13px;color:var(--muted);margin-top:4px;}
+  /* 浮動查詢按鈕 */
+  .fab{position:fixed;bottom:24px;right:20px;width:60px;height:60px;border-radius:50%;background:linear-gradient(135deg,var(--a1),#5040c0);border:none;color:#fff;font-size:26px;cursor:pointer;z-index:500;box-shadow:0 4px 20px rgba(124,111,255,0.5);-webkit-appearance:none;display:flex;align-items:center;justify-content:center;}
+  .fab:active{transform:scale(0.92);}
+  .fab-label{position:fixed;bottom:24px;right:88px;background:var(--s1);border:0.5px solid var(--border);border-radius:10px;padding:8px 14px;font-size:14px;color:var(--text);z-index:500;white-space:nowrap;box-shadow:0 2px 12px rgba(0,0,0,0.4);}
+
 </style>
 </head>
 <body>
 
-<!-- Header -->
 <div class="header">
   <div class="header-inner">
     <div class="header-top">
       <div>
-        <div class="logo-tag">TAIWAN LOTTERY · AI PREDICTOR v8</div>
+        <div class="logo-tag">TAIWAN LOTTERY · AI PREDICTOR v9</div>
         <h1>台彩三合一<em>智慧預測</em></h1>
       </div>
     </div>
@@ -552,7 +592,29 @@
 
 </div><!-- end main -->
 
+<!-- 浮動查詢按鈕 -->
+<div class="fab-label">📋 預測紀錄</div>
+<button class="fab" onclick="openDB()" title="查詢預測紀錄">📋</button>
+
+<!-- 資料庫面板 -->
+<div class="db-panel" id="db-panel">
+  <div class="db-inner">
+    <div class="db-header">
+      <div class="db-title">📋 預測紀錄資料庫</div>
+      <button class="db-close" onclick="closeDB()">✕ 關閉</button>
+    </div>
+    <div class="db-tabs">
+      <button class="db-tab on" onclick="switchDB('big',this)">🎱 大樂透</button>
+      <button class="db-tab" onclick="switchDB('539',this)">🎯 今彩539</button>
+      <button class="db-tab" onclick="switchDB('pw',this)">⚡ 威力彩</button>
+    </div>
+    <div class="db-stats" id="db-stats"></div>
+    <div class="db-list" id="db-list"></div>
+  </div>
+</div>
+
 <script>
+
 const CFG={
   big:{max:49,pick:6,hasSp:false,spMax:0,name:'大樂透',drawDays:[2,5]},
   '539':{max:39,pick:5,hasSp:false,spMax:0,name:'今彩539',drawDays:[1,2,3,4,5,6]},
@@ -561,33 +623,34 @@ const CFG={
 
 const DB={
   big:[
-    {d:'05/08',n:[10,18,25,28,39,43],s:48},{d:'05/05',n:[4,17,23,28,33,37],s:15},
-    {d:'05/01',n:[7,22,27,35,43,48],s:45},{d:'04/28',n:[6,10,14,25,26,32],s:7},
-    {d:'04/24',n:[7,14,16,37,39,47],s:34},{d:'04/21',n:[1,6,17,19,20,40],s:22},
-    {d:'04/17',n:[7,10,11,22,40,45],s:18},{d:'04/14',n:[4,8,21,23,24,43],s:13},
-    {d:'04/10',n:[4,10,15,17,21,40],s:30},{d:'04/07',n:[1,2,6,16,18,26],s:47},
-    {d:'04/03',n:[5,12,13,25,36,48],s:8},{d:'03/31',n:[5,11,25,40,45,47],s:39},
-    {d:'03/27',n:[4,8,23,26,29,36],s:38},{d:'03/24',n:[14,33,41,42,44,48],s:47},
-    {d:'03/20',n:[11,15,33,38,41,43],s:21},{d:'03/17',n:[2,6,10,22,40,45],s:17},
-    {d:'03/13',n:[5,12,13,38,47,48],s:3},{d:'03/10',n:[5,11,29,37,43,47],s:10},
-    {d:'03/06',n:[9,11,12,14,23,25],s:42},{d:'03/03',n:[5,26,27,35,45,46],s:37},
-    {d:'03/02',n:[19,25,27,28,33,39],s:37},{d:'03/01',n:[4,7,34,40,44,49],s:37},
-    {d:'02/28',n:[17,23,30,37,39,49],s:43},{d:'02/27',n:[14,18,19,34,45,47],s:48},
-    {d:'02/26',n:[1,16,22,24,47,48],s:7},{d:'02/25',n:[7,15,22,38,45,49],s:31},
-    {d:'02/24',n:[12,19,22,27,28,31],s:45},{d:'02/23',n:[6,10,23,27,47,48],s:30},
-    {d:'02/22',n:[5,7,17,22,24,47],s:20},{d:'02/21',n:[12,13,17,27,41,48],s:46},
-    {d:'02/20',n:[13,15,18,24,33,49],s:10},{d:'02/19',n:[20,28,29,31,35,41],s:6},
-    {d:'02/18',n:[16,35,36,37,39,49],s:45},{d:'02/17',n:[6,12,24,26,37,46],s:36},
-    {d:'02/16',n:[11,16,18,27,38,46],s:43},{d:'02/15',n:[3,6,11,18,25,28],s:35},
-    {d:'02/14',n:[1,11,22,35,36,40],s:28},{d:'02/13',n:[9,20,25,35,39,48],s:47},
-    {d:'02/12',n:[1,3,8,15,20,48],s:46},{d:'02/10',n:[6,16,20,21,24,35],s:13},
-    {d:'02/06',n:[4,12,24,25,39,48],s:9},{d:'02/03',n:[6,14,32,33,39,43],s:13},
-    {d:'01/30',n:[9,13,27,31,32,39],s:19},{d:'01/27',n:[4,11,24,25,29,30],s:8},
-    {d:'01/23',n:[21,23,32,36,39,43],s:12},{d:'01/20',n:[2,7,26,41,44,45],s:46},
-    {d:'01/16',n:[3,14,19,31,44,47],s:20},{d:'01/13',n:[6,15,28,33,36,42],s:49},
-    {d:'01/09',n:[8,19,26,34,41,49],s:16},{d:'01/06',n:[3,13,22,27,30,46],s:29}
+    {d:'05/08',n:[10,18,25,28,39,43],s:0},{d:'05/05',n:[4,17,23,28,33,37],s:0},
+    {d:'05/01',n:[7,22,27,35,43,48],s:0},{d:'04/28',n:[6,10,14,25,26,32],s:0},
+    {d:'04/24',n:[7,14,16,37,39,47],s:0},{d:'04/21',n:[1,6,17,19,20,40],s:0},
+    {d:'04/17',n:[7,10,11,22,40,45],s:0},{d:'04/14',n:[4,8,21,23,24,43],s:0},
+    {d:'04/10',n:[4,10,15,17,21,40],s:0},{d:'04/07',n:[1,2,6,16,18,26],s:0},
+    {d:'04/03',n:[5,12,13,25,36,48],s:0},{d:'03/31',n:[5,11,25,40,45,47],s:0},
+    {d:'03/27',n:[4,8,23,26,29,36],s:0},{d:'03/24',n:[14,33,41,42,44,48],s:0},
+    {d:'03/20',n:[11,15,33,38,41,43],s:0},{d:'03/17',n:[2,6,10,22,40,45],s:0},
+    {d:'03/13',n:[5,12,13,38,47,48],s:0},{d:'03/10',n:[5,11,29,37,43,47],s:0},
+    {d:'03/06',n:[9,11,12,14,23,25],s:0},{d:'03/03',n:[5,26,27,35,45,46],s:0},
+    {d:'03/02',n:[19,25,27,28,33,39],s:0},{d:'03/01',n:[4,7,34,40,44,49],s:0},
+    {d:'02/28',n:[17,23,30,37,39,49],s:0},{d:'02/27',n:[14,18,19,34,45,47],s:0},
+    {d:'02/26',n:[1,16,22,24,47,48],s:0},{d:'02/25',n:[7,15,22,38,45,49],s:0},
+    {d:'02/24',n:[12,19,22,27,28,31],s:0},{d:'02/23',n:[6,10,23,27,47,48],s:0},
+    {d:'02/22',n:[5,7,17,22,24,47],s:0},{d:'02/21',n:[12,13,17,27,41,48],s:0},
+    {d:'02/20',n:[13,15,18,24,33,49],s:0},{d:'02/19',n:[20,28,29,31,35,41],s:0},
+    {d:'02/18',n:[16,35,36,37,39,49],s:0},{d:'02/17',n:[6,12,24,26,37,46],s:0},
+    {d:'02/16',n:[11,16,18,27,38,46],s:0},{d:'02/15',n:[3,6,11,18,25,28],s:0},
+    {d:'02/14',n:[1,11,22,35,36,40],s:0},{d:'02/13',n:[9,20,25,35,39,48],s:0},
+    {d:'02/12',n:[1,3,8,15,20,48],s:0},{d:'02/10',n:[6,16,20,21,24,35],s:0},
+    {d:'02/06',n:[4,12,24,25,39,48],s:0},{d:'02/03',n:[6,14,32,33,39,43],s:0},
+    {d:'01/30',n:[9,13,27,31,32,39],s:0},{d:'01/27',n:[4,11,24,25,29,30],s:0},
+    {d:'01/23',n:[21,23,32,36,39,43],s:0},{d:'01/20',n:[2,7,26,41,44,45],s:0},
+    {d:'01/16',n:[3,14,19,31,44,47],s:0},{d:'01/13',n:[6,15,28,33,36,42],s:0},
+    {d:'01/09',n:[8,19,26,34,41,49],s:0},{d:'01/06',n:[3,13,22,27,30,46],s:0}
   ],
   '539':[
+    {d:'05/11',n:[2,13,21,36,37],s:0},{d:'05/10',n:[6,14,21,33,38],s:0},
     {d:'05/09',n:[11,18,21,22,25],s:0},{d:'05/08',n:[18,19,23,26,28],s:0},
     {d:'05/07',n:[1,6,18,25,36],s:0},{d:'05/06',n:[4,10,11,34,39],s:0},
     {d:'05/05',n:[8,16,24,27,37],s:0},{d:'05/04',n:[8,22,26,36,39],s:0},
@@ -620,30 +683,29 @@ const DB={
     {d:'02/21',n:[1,8,19,20,25],s:0},{d:'02/20',n:[4,11,22,23,27],s:0},
     {d:'02/19',n:[8,15,19,25,27],s:0},{d:'02/18',n:[8,10,12,32,33],s:0},
     {d:'02/17',n:[6,8,11,20,21],s:0},{d:'02/16',n:[5,7,15,18,34],s:0},
-    {d:'02/14',n:[22,13,18,11,34].sort((a,b)=>a-b),s:0},
-    {d:'02/13',n:[6,8,11,20,21],s:0},{d:'02/12',n:[1,6,22,23,37],s:0},
-    {d:'02/10',n:[6,16,20,21,24],s:0}
+    {d:'02/14',n:[11,13,18,22,34],s:0},{d:'02/13',n:[6,8,11,20,21],s:0},
+    {d:'02/12',n:[1,6,22,23,37],s:0},{d:'02/10',n:[6,16,20,21,24],s:0}
   ],
   pw:[
-    {d:'05/07',n:[3,14,15,24,34,38],s:3},{d:'05/04',n:[9,21,29,32,36,38],s:2},
-    {d:'04/30',n:[1,4,13,19,27,30],s:8},{d:'04/27',n:[6,8,27,33,35,38],s:2},
-    {d:'04/23',n:[10,14,15,16,27,33],s:5},{d:'04/20',n:[7,13,19,34,35,37],s:8},
-    {d:'04/16',n:[4,11,16,22,30,38],s:6},{d:'04/13',n:[3,10,11,16,19,24],s:5},
-    {d:'04/09',n:[4,9,13,27,29,34],s:3},{d:'04/06',n:[5,8,22,27,35,38],s:4},
-    {d:'04/02',n:[5,15,17,23,25,34],s:6},{d:'03/30',n:[2,13,21,22,29,34],s:1},
-    {d:'03/26',n:[13,14,22,28,35,38],s:5},{d:'03/23',n:[1,9,18,28,33,38],s:5},
-    {d:'03/19',n:[9,13,14,18,31,34],s:1},{d:'03/16',n:[14,26,28,31,32,34],s:1},
-    {d:'03/12',n:[4,9,15,25,27,31],s:8},{d:'03/09',n:[1,11,14,17,29,32],s:8},
-    {d:'03/05',n:[7,11,14,32,36,38],s:2},{d:'03/02',n:[7,9,11,23,25,29],s:5},
-    {d:'02/26',n:[3,19,27,30,37,38],s:2},{d:'02/23',n:[4,10,13,24,31,35],s:2},
-    {d:'02/19',n:[2,3,6,12,23,27],s:4},{d:'02/16',n:[1,8,15,22,30,37],s:6},
-    {d:'02/13',n:[5,11,18,25,32,36],s:3},{d:'02/10',n:[3,12,20,27,34,38],s:7},
-    {d:'02/06',n:[6,14,21,28,33,37],s:5},{d:'02/03',n:[2,9,17,24,31,35],s:1},
-    {d:'01/30',n:[4,13,22,29,36,38],s:8},{d:'01/27',n:[7,15,19,26,33,37],s:4},
-    {d:'01/23',n:[1,10,18,25,34,36],s:6},{d:'01/20',n:[5,12,21,28,35,38],s:3},
-    {d:'01/16',n:[8,15,22,29,33,37],s:7},{d:'01/13',n:[2,9,17,24,31,36],s:5},
-    {d:'01/09',n:[6,13,20,27,34,38],s:1},{d:'01/06',n:[3,10,18,25,32,37],s:8},
-    {d:'01/02',n:[7,14,21,28,35,36],s:4},
+    {d:'05/11',n:[15,19,23,26,31,38],s:5},{d:'05/07',n:[3,14,15,24,34,38],s:3},
+    {d:'05/04',n:[9,21,29,32,36,38],s:2},{d:'04/30',n:[1,4,13,19,27,30],s:8},
+    {d:'04/27',n:[6,8,27,33,35,38],s:2},{d:'04/23',n:[10,14,15,16,27,33],s:5},
+    {d:'04/20',n:[7,13,19,34,35,37],s:8},{d:'04/16',n:[4,11,16,22,30,38],s:6},
+    {d:'04/13',n:[3,10,11,16,19,24],s:5},{d:'04/09',n:[4,9,13,27,29,34],s:3},
+    {d:'04/06',n:[5,8,22,27,35,38],s:4},{d:'04/02',n:[5,15,17,23,25,34],s:6},
+    {d:'03/30',n:[2,13,21,22,29,34],s:1},{d:'03/26',n:[13,14,22,28,35,38],s:5},
+    {d:'03/23',n:[1,9,18,28,33,38],s:5},{d:'03/19',n:[9,13,14,18,31,34],s:1},
+    {d:'03/16',n:[14,26,28,31,32,34],s:1},{d:'03/12',n:[4,9,15,25,27,31],s:8},
+    {d:'03/09',n:[1,11,14,17,29,32],s:8},{d:'03/05',n:[7,11,14,32,36,38],s:2},
+    {d:'03/02',n:[7,9,11,23,25,29],s:5},{d:'02/26',n:[3,19,27,30,37,38],s:2},
+    {d:'02/23',n:[4,10,13,24,31,35],s:2},{d:'02/19',n:[2,3,6,12,23,27],s:4},
+    {d:'02/16',n:[1,8,15,22,30,37],s:6},{d:'02/13',n:[5,11,18,25,32,36],s:3},
+    {d:'02/10',n:[3,12,20,27,34,38],s:7},{d:'02/06',n:[6,14,21,28,33,37],s:5},
+    {d:'02/03',n:[2,9,17,24,31,35],s:1},{d:'01/30',n:[4,13,22,29,36,38],s:8},
+    {d:'01/27',n:[7,15,19,26,33,37],s:4},{d:'01/23',n:[1,10,18,25,34,36],s:6},
+    {d:'01/20',n:[5,12,21,28,35,38],s:3},{d:'01/16',n:[8,15,22,29,33,37],s:7},
+    {d:'01/13',n:[2,9,17,24,31,36],s:5},{d:'01/09',n:[6,13,20,27,34,38],s:1},
+    {d:'01/06',n:[3,10,18,25,32,37],s:8},{d:'01/02',n:[7,14,21,28,35,36],s:4},
     {d:'12/30',n:[4,11,19,26,33,38],s:2},{d:'12/26',n:[1,8,16,23,30,37],s:6},
     {d:'12/23',n:[5,12,20,27,34,36],s:3},{d:'12/19',n:[9,15,22,29,33,38],s:7},
     {d:'12/16',n:[2,10,17,24,31,37],s:5},{d:'12/12',n:[6,13,21,28,35,36],s:1},
@@ -656,44 +718,10 @@ const DB={
 const preds={big:null,'539':null,pw:null};
 const hist={big:[],'539':[],pw:[]};
 
+// ---- 工具函數 ----
 function freq(D,max){const f={};for(let i=1;i<=max;i++)f[i]=0;D.forEach(d=>d.n.forEach(n=>{if(n>=1&&n<=max)f[n]++;}));return f;}
-function sd(o){return Object.entries(o).map(([k,v])=>({n:parseInt(k),v})).sort((a,b)=>b.v-a.v);}
+function sd(obj){return Object.entries(obj).map(([k,v])=>({n:parseInt(k),v})).sort((a,b)=>b.v-a.v);}
 function miss(D,max){const m={};for(let i=1;i<=max;i++){let l=D.length;for(let j=0;j<D.length;j++){if(D[j].n.includes(i)){l=j;break;}}m[i]=l;}return m;}
-function nextDate(game){
-  // 強制使用台灣標準時間 UTC+8
-  const dn=['日','一','二','三','四','五','六'];
-  const dd=CFG[game].drawDays;
-
-  // 取得台灣時間
-  const utc = Date.now() + (new Date().getTimezoneOffset() * 60000);
-  const twnow = new Date(utc + 8 * 3600000); // UTC+8
-
-  const todayDay = twnow.getDay();
-  const nowHour  = twnow.getHours();
-  const nowMin   = twnow.getMinutes();
-  const beforeDraw = (nowHour < 20) || (nowHour === 20 && nowMin < 30);
-
-  // 今天是開獎日 且 20:30 前 → 預測今天
-  if(dd.includes(todayDay) && beforeDraw){
-    const mm = String(twnow.getMonth()+1).padStart(2,'0');
-    const dd2 = String(twnow.getDate()).padStart(2,'0');
-    return `${mm}/${dd2}（週${dn[todayDay]}，今日 20:30）`;
-  }
-
-  // 否則找下一個開獎日
-  for(let i=1; i<=7; i++){
-    const next = new Date(twnow);
-    next.setDate(twnow.getDate() + i);
-    if(dd.includes(next.getDay())){
-      const mm = String(next.getMonth()+1).padStart(2,'0');
-      const dd2 = String(next.getDate()).padStart(2,'0');
-      return `${mm}/${dd2}（週${dn[next.getDay()]}）`;
-    }
-  }
-  return '下期';
-}
-function mkBall(n,cls){const d=document.createElement('div');d.className=`ball ${cls}`;d.textContent=n<10?'0'+n:String(n);return d;}
-function sleep(ms){return new Promise(r=>setTimeout(r,ms));}
 
 function isWin(game,pred,actual,actualSp,predSp){
   if(game==='big'){const h=pred.filter(n=>actual.includes(n)).length;return{win:h>=3,hits:h,label:`主號${h}碼`};}
@@ -702,45 +730,108 @@ function isWin(game,pred,actual,actualSp,predSp){
   return{win:h>=3||(h>=1&&sp)||sp,hits:h,label:h>=3?`第一區${h}碼`:sp?`${h}碼+第二區`:`${h}碼`};
 }
 
+// ---- 台灣時間 ----
+function getTWNow(){
+  const utc=Date.now()+(new Date().getTimezoneOffset()*60000);
+  return new Date(utc+8*3600000);
+}
+
+function nextDate(game){
+  const dn=['日','一','二','三','四','五','六'];
+  const dd=CFG[game].drawDays;
+  const twnow=getTWNow();
+  const todayDay=twnow.getDay(),nowHour=twnow.getHours(),nowMin=twnow.getMinutes();
+  const beforeDraw=(nowHour<20)||(nowHour===20&&nowMin<30);
+  if(dd.includes(todayDay)&&beforeDraw){
+    const mm=String(twnow.getMonth()+1).padStart(2,'0');
+    const dd2=String(twnow.getDate()).padStart(2,'0');
+    return `${mm}/${dd2}（週${dn[todayDay]}，今日20:30）`;
+  }
+  for(let i=1;i<=7;i++){
+    const d=new Date(twnow);d.setDate(twnow.getDate()+i);
+    if(dd.includes(d.getDay())){
+      return `${String(d.getMonth()+1).padStart(2,'0')}/${String(d.getDate()).padStart(2,'0')}（週${dn[d.getDay()]}）`;
+    }
+  }
+  return '下期';
+}
+
+function mkBall(n,cls){const d=document.createElement('div');d.className=`ball ${cls}`;d.textContent=n<10?'0'+n:String(n);return d;}
+function sleep(ms){return new Promise(r=>setTimeout(r,ms));}
+
+// ---- 10種預測方法（539/威力彩優化版）----
 function methods(game){
   const {max,pick}=CFG[game];
+  const F=(D,mx)=>{const f={};for(let i=1;i<=mx;i++)f[i]=0;D.forEach(d=>d.n.forEach(n=>{if(n>=1&&n<=mx)f[n]++;}));return f;};
+  const M=(D,mx)=>{const m={};for(let i=1;i<=mx;i++){let l=D.length;for(let j=0;j<D.length;j++){if(D[j].n.includes(i)){l=j;break;}}m[i]=l;}return m;};
+  const S=(f)=>Object.entries(f).map(([k,v])=>({n:parseInt(k),v})).sort((a,b)=>b.v-a.v);
   return[
-    {id:'zone',name:'分區均衡',col:'#9FE1CB',p(D){
-      const f=freq(D,max),s=sd(f),z=Math.ceil(max/3);
-      const a=s.filter(x=>x.n<=z).slice(0,2).map(x=>x.n);
-      const b=s.filter(x=>x.n>z&&x.n<=z*2).slice(0,2).map(x=>x.n);
-      const c=s.filter(x=>x.n>z*2).slice(0,pick-a.length-b.length+1).map(x=>x.n);
-      return[...a,...b,...c].slice(0,pick).sort((a,b)=>a-b);}},
-    {id:'hot',name:'熱門頻率',col:'#FAC775',p(D){return sd(freq(D.slice(0,Math.min(20,D.length)),max)).slice(0,pick).map(x=>x.n).sort((a,b)=>a-b);}},
-    {id:'cold',name:'冷號補位',col:'#B5D4F4',p(D){return sd(miss(D,max)).slice(0,pick).map(x=>x.n).sort((a,b)=>a-b);}},
+    {id:'hot',name:'熱門頻率',col:'#FAC775',p(D){return S(F(D.slice(0,Math.min(20,D.length)),max)).slice(0,pick).map(x=>x.n).sort((a,b)=>a-b);}},
+    {id:'cold',name:'冷號補位',col:'#B5D4F4',p(D){return S(M(D,max)).slice(0,pick).map(x=>x.n).sort((a,b)=>a-b);}},
     {id:'mix',name:'冷熱均衡',col:'#AFA9EC',p(D){
-      const f=freq(D.slice(0,Math.min(20,D.length)),max),m=miss(D,max);
-      const h=sd(f).slice(0,Math.ceil(pick/2)).map(x=>x.n);
-      const c=sd(m).filter(x=>!h.includes(x.n)).slice(0,pick-h.length).map(x=>x.n);
-      return[...h,...c].sort((a,b)=>a-b);}},
-    {id:'decay',name:'衰減加權',col:'#CEC0F6',p(D){
-      const f={};for(let i=1;i<=max;i++)f[i]=0;const w=Math.min(D.length,15);
-      for(let i=0;i<w;i++)D[i].n.forEach(n=>{if(n<=max)f[n]+=(w-i);});
-      return sd(f).slice(0,pick).map(x=>x.n).sort((a,b)=>a-b);}},
+      const f=F(D.slice(0,Math.min(20,D.length)),max),m=M(D,max);
+      const h=S(f).slice(0,Math.ceil(pick/2)).map(x=>x.n);
+      const c=S(m).filter(x=>!h.includes(x.n)).slice(0,pick-h.length).map(x=>x.n);
+      return [...h,...c].sort((a,b)=>a-b);}},
     {id:'oe',name:'奇偶平衡',col:'#F5C4B3',p(D){
-      const f=freq(D.slice(0,Math.min(20,D.length)),max),s=sd(f),h=Math.floor(pick/2);
-      return[...s.filter(x=>x.n%2===1).slice(0,pick-h),...s.filter(x=>x.n%2===0).slice(0,h)].map(x=>x.n).sort((a,b)=>a-b);}},
+      const f=F(D.slice(0,Math.min(20,D.length)),max),s=S(f),h=Math.floor(pick/2);
+      return [...s.filter(x=>x.n%2===1).slice(0,pick-h),...s.filter(x=>x.n%2===0).slice(0,h)].map(x=>x.n).sort((a,b)=>a-b);}},
     {id:'span',name:'跨度控制',col:'#E1F5EE',p(D){
-      const f=freq(D.slice(0,Math.min(20,D.length)),max),s=sd(f);
+      const f=F(D.slice(0,Math.min(20,D.length)),max),s=S(f);
       const C=s.slice(0,16).map(x=>x.n).sort((a,b)=>a-b),tg=Math.round(max*0.65);
       let best=null,bs=999;
       for(let i=0;i<=C.length-pick;i++){const co=C.slice(i,i+pick),sp=co[co.length-1]-co[0],sc=Math.abs(sp-tg);if(sc<bs){bs=sc;best=[...co];}}
       return best||s.slice(0,pick).map(x=>x.n).sort((a,b)=>a-b);}},
-    {id:'consec',name:'連號偵測',col:'#FAECE7',p(D){
-      const r=D.slice(0,Math.min(20,D.length)),cs={};for(let i=1;i<=max;i++)cs[i]=0;
-      r.forEach(d=>{const sv=[...d.n].sort((a,b)=>a-b);for(let i=0;i<sv.length-1;i++){if(sv[i+1]-sv[i]===1){cs[sv[i]]+=2;cs[sv[i+1]]+=2;}}});
-      const f=freq(r,max),cb={};for(let i=1;i<=max;i++)cb[i]=(f[i]||0)+(cs[i]||0)*1.5;
-      return sd(cb).slice(0,pick).map(x=>x.n).sort((a,b)=>a-b);}}
+    {id:'hot10',name:'近10期熱',col:'#FFD700',p(D){
+      return S(F(D.slice(0,Math.min(10,D.length)),max)).slice(0,pick).map(x=>x.n).sort((a,b)=>a-b);}},
+    {id:'tail',name:'尾數熱門',col:'#FF9F43',p(D){
+      const r=D.slice(0,Math.min(20,D.length));
+      const tf={};for(let i=0;i<=9;i++)tf[i]=0;
+      r.forEach(d=>d.n.forEach(n=>{if(n>=1&&n<=max)tf[n%10]++;}));
+      const ht=Object.entries(tf).sort((a,b)=>b[1]-a[1]).slice(0,4).map(x=>parseInt(x[0]));
+      const f=F(r,max),s=S(f);const picks=[];
+      ht.forEach(t=>{const c=s.filter(x=>x.n%10===t&&!picks.includes(x.n));if(c.length&&picks.length<pick)picks.push(c[0].n);});
+      let i=0;while(picks.length<pick){if(!picks.includes(s[i].n))picks.push(s[i].n);i++;}
+      return picks.sort((a,b)=>a-b);}},
+    {id:'zone_mix',name:'三區冷熱',col:'#9FE1CB',p(D){
+      const f=F(D.slice(0,Math.min(20,D.length)),max),m=M(D,max);
+      const z=Math.ceil(max/3),zones=[[1,z],[z+1,z*2],[z*2+1,max]];
+      const picks=[];
+      zones.forEach(([lo,hi])=>{
+        const inZ=Array.from({length:hi-lo+1},(_,k)=>k+lo);
+        const hot=inZ.slice().sort((a,b)=>(f[b]||0)-(f[a]||0));
+        const cold=inZ.slice().sort((a,b)=>(m[b]||0)-(m[a]||0));
+        for(const n of hot){if(!picks.includes(n)){picks.push(n);break;}}
+        for(const n of cold){if(!picks.includes(n)){picks.push(n);break;}}
+      });
+      const s=S(f);let i=0;
+      while(picks.length<pick){if(!picks.includes(s[i].n))picks.push(s[i].n);i++;}
+      return picks.slice(0,pick).sort((a,b)=>a-b);}},
+    {id:'consec2',name:'連號強化',col:'#FAECE7',p(D){
+      const r=D.slice(0,Math.min(15,D.length));
+      const cs={};for(let i=1;i<=max;i++)cs[i]=0;
+      r.forEach(d=>{const sv=[...d.n].sort((a,b)=>a-b);
+        for(let i=0;i<sv.length-1;i++){
+          if(sv[i+1]-sv[i]===1){cs[sv[i]]+=3;cs[sv[i+1]]+=3;}
+          else if(sv[i+1]-sv[i]===2){cs[sv[i]]+=1;cs[sv[i+1]]+=1;}
+        }});
+      const f=F(r,max),cb={};
+      for(let i=1;i<=max;i++)cb[i]=(f[i]||0)*1.2+(cs[i]||0)*2;
+      return S(cb).slice(0,pick).map(x=>x.n).sort((a,b)=>a-b);}},
+    {id:'decay_consec',name:'衰減+連號',col:'#A29BFE',p(D){
+      const f={};for(let i=1;i<=max;i++)f[i]=0;const w=Math.min(D.length,12);
+      for(let i=0;i<w;i++)D[i].n.forEach(n=>{if(n>=1&&n<=max)f[n]+=(w-i)*1.5;});
+      const cs={};for(let i=1;i<=max;i++)cs[i]=0;
+      D.slice(0,10).forEach(d=>{const sv=[...d.n].sort((a,b)=>a-b);
+        for(let i=0;i<sv.length-1;i++){if(sv[i+1]-sv[i]===1){cs[sv[i]]+=3;cs[sv[i+1]]+=3;}}});
+      const cb={};for(let i=1;i<=max;i++)cb[i]=(f[i]||0)+(cs[i]||0);
+      return S(cb).slice(0,pick).map(x=>x.n).sort((a,b)=>a-b);}},
   ];
 }
 
 function getPwSp(D){const sf={};for(let i=1;i<=8;i++)sf[i]=0;D.slice(0,20).forEach(d=>{if(d.s>=1&&d.s<=8)sf[d.s]++;});return sd(sf)[0].n;}
 
+// ---- 回測 ----
 function backtest(game){
   const M=methods(game),D=DB[game],res={};M.forEach(m=>res[m.id]=[]);
   for(let i=0;i<D.length-10;i++){
@@ -752,13 +843,15 @@ function backtest(game){
 }
 function wr(r){if(!r.length)return 0;return r.filter(x=>x.win).length/r.length*100;}
 
+// ---- 初始化 ----
 function initLatest(g){
   const l=DB[g][0];
   document.getElementById(`d-${g}`).textContent=l.d;
   const el=document.getElementById(`latest-${g}`);el.innerHTML='';
   l.n.forEach(n=>el.appendChild(mkBall(n,'bn')));
-  if(CFG[g].hasSp&&l.s){const lb=document.createElement('span');lb.className='splbl';lb.textContent='特';el.appendChild(lb);el.appendChild(mkBall(l.s,g==='pw'?'bpw2':'bsp'));}
-  const dc=document.getElementById(`dc-${g}`);if(dc)dc.innerHTML=`✅ <b>${DB[g].length}</b> 期真實資料`;
+  if(CFG[g].hasSp&&l.s){const lb=document.createElement('span');lb.className='splbl';lb.textContent='特';el.appendChild(lb);el.appendChild(mkBall(l.s,'bpw2'));}
+  const dc=document.getElementById(`dc-${g}`);
+  if(dc)dc.innerHTML=`✅ <b>${DB[g].length}</b> 期真實資料`;
   buildInputs(g);
 }
 
@@ -778,18 +871,17 @@ function addDraw(g){
   if(nums.length<cfg.pick){alert(`請輸入完整${cfg.pick}個號碼（1–${cfg.max}）`);return;}
   nums.sort((a,b)=>a-b);
   let sp=0;if(cfg.hasSp){sp=parseInt(document.getElementById(`u-${g}-sp`)?.value)||0;}
-  // 台灣時間 UTC+8
-  const _utc=Date.now()+(new Date().getTimezoneOffset()*60000);
-  const _tw=new Date(_utc+8*3600000);
-  const dd=`${String(_tw.getMonth()+1).padStart(2,'0')}/${String(_tw.getDate()).padStart(2,'0')}`;
+  const tw=getTWNow(),dd=`${String(tw.getMonth()+1).padStart(2,'0')}/${String(tw.getDate()).padStart(2,'0')}`;
+  if(DB[g].find(d=>d.d===dd)){alert(`${dd} 的資料已存在！`);return;}
   DB[g].unshift({d:dd,n:nums,s:sp});
   initLatest(g);
-  alert(`✅ 已加入 ${dd}（${nums.join(', ')}），資料庫現有 ${DB[g].length} 期！\n\n請按「立即生成」重新預測。`);
+  alert(`✅ 已加入 ${dd}（${nums.join(', ')}），共 ${DB[g].length} 期，請按「立即生成」重新預測！`);
 }
 
+// ---- 生成預測 ----
 async function gen(g){
   const D=DB[g];
-  const STEPS=[`載入 ${D.length} 期真實資料`,'計算 8 種版路方法','依正確中獎門檻回測','有獎命中率加權投票','產出最佳預測號碼'];
+  const STEPS=[`載入 ${D.length} 期真實資料`,'計算10種版路方法','依正確中獎門檻回測','有獎命中率加權投票','產出最佳預測號碼'];
   const prog=document.getElementById(`prog-${g}`);
   prog.style.display='block';
   ['pc','rc','vc','hc'].forEach(p=>{const el=document.getElementById(`${p}-${g}`);if(el)el.style.display='none';});
@@ -811,7 +903,6 @@ async function gen(g){
   const vs=sd(votes);
   const topN=vs.slice(0,cfg.pick).map(x=>x.n).sort((a,b)=>a-b);
   const backup=vs.slice(cfg.pick,cfg.pick+4).map(x=>x.n);
-
   let spNum=null;
   if(g==='pw'){spNum=getPwSp(D);}
 
@@ -819,9 +910,8 @@ async function gen(g){
   document.getElementById(`nd-${g}`).textContent=nd;
   const pb=document.getElementById(`pb-${g}`);pb.innerHTML='';
   topN.forEach(n=>pb.appendChild(mkBall(n,'bpred')));
-
-  if(g==='pw'){const pp=document.getElementById(`pp-${g}`);pp.innerHTML='';if(spNum)pp.appendChild(mkBall(spNum,'bpred-pw'));}
-  document.getElementById(`bk-${g}`).textContent=backup.length?`備選：${backup.join('  ')}（包牌參考）`:'';
+  if(g==='pw'&&spNum){const pp=document.getElementById(`pp-${g}`);pp.innerHTML='';pp.appendChild(mkBall(spNum,'bpred-pw'));}
+  document.getElementById(`bk-${g}`).textContent=backup.length?`備選：${backup.join('  ')}　（包牌參考）`:'';
   const sm=topN.reduce((a,b)=>a+b,0),oe=topN.filter(n=>n%2===1).length;
   document.getElementById(`ft-${g}`).innerHTML=`<span>總和 <b>${sm}</b></span><span>奇偶 <b>${oe}奇${topN.length-oe}偶</b></span><span>跨度 <b>${topN[topN.length-1]-topN[0]}</b></span>`;
 
@@ -832,15 +922,16 @@ async function gen(g){
     const row=document.createElement('div');row.className='mrow';
     const rc=i===0?'r1':i===1?'r2':i===2?'r3':'rn';
     const md=i===0?'🥇':i===1?'🥈':i===2?'🥉':i+1;
-    const col=m.rate>=35?'var(--a3)':m.rate>=20?'var(--gold)':'var(--muted)';
+    const col=m.rate>=30?'var(--a3)':m.rate>=15?'var(--gold)':'var(--muted)';
     row.innerHTML=`<div class="rk ${rc}">${md}</div><div class="mn">${m.name}</div>
       <div class="mbg"><div class="mfill" style="width:${Math.round(m.rate/maxR*100)}%;background:${m.col}"></div></div>
       <div class="mpct" style="color:${col}">${m.rate.toFixed(1)}%</div>`;
     rl.appendChild(row);
   });
-  document.getElementById(`hn-${g}`).textContent=`回測${bt[ranked[0].id].length}期 ｜ 最佳：${ranked[0].name} ${ranked[0].rate.toFixed(1)}%`;
+  document.getElementById(`hn-${g}`).textContent=`回測${bt[ranked[0].id].length}期｜最佳：${ranked[0].name} ${ranked[0].rate.toFixed(1)}%`;
 
   preds[g]={pred:topN,sp:spNum,date:nd};
+  saveNewPrediction(g,topN,spNum,nd);
   hist[g].unshift({date:nd,pred:topN,sp:spNum,hit:null,win:null,winLabel:null});
   renderHist(g);
   await sleep(200);
@@ -849,8 +940,9 @@ async function gen(g){
   document.getElementById(`pc-${g}`).scrollIntoView({behavior:'smooth',block:'start'});
 }
 
+// ---- 驗證 ----
 function verify(g){
-  const p=preds[g];if(!p)return;
+  const p=preds[g];if(!p){alert('請先生成預測！');return;}
   const cfg=CFG[g];const actual=[];
   for(let i=0;i<cfg.pick;i++){const v=parseInt(document.getElementById(`v-${g}-${i}`)?.value);if(v>=1&&v<=cfg.max)actual.push(v);}
   if(actual.length<cfg.pick){alert(`請輸入${cfg.pick}個號碼`);return;}
@@ -862,9 +954,12 @@ function verify(g){
   p.pred.forEach(n=>vb.appendChild(mkBall(n,actual.includes(n)?'bhit':'bn')));
   document.getElementById(`vr-${g}`).style.display='block';
   if(hist[g][0])Object.assign(hist[g][0],{hit:result.hits,win:result.win,winLabel:result.label});
+  const recIdx=RECORDS[g]?RECORDS[g].findIndex(r=>r.date===p.date):-1;
+  if(recIdx>=0){RECORDS[g][recIdx].actual=actual;RECORDS[g][recIdx].hits=result.hits;RECORDS[g][recIdx].win=result.win;RECORDS[g][recIdx].winLabel=result.label;saveRecords(RECORDS);}
   renderHist(g);
 }
 
+// ---- 歷史 ----
 function renderHist(g){
   const el=document.getElementById(`hl-${g}`);el.innerHTML='';
   if(!hist[g].length){el.innerHTML='<div style="font-size:18px;color:var(--muted)">尚無紀錄</div>';return;}
@@ -878,15 +973,85 @@ function renderHist(g){
   });
 }
 
+// ---- Tab 切換 ----
 function sw(game,el){
   document.querySelectorAll('.gtab').forEach(t=>t.classList.remove('on'));
   document.querySelectorAll('.gpane').forEach(p=>p.classList.remove('on'));
-  el.classList.add('on');
-  document.getElementById(`g-${game}`).classList.add('on');
+  el.classList.add('on');document.getElementById(`g-${game}`).classList.add('on');
   window.scrollTo({top:0,behavior:'smooth'});
 }
 
+// ---- localStorage 預測紀錄 ----
+const STORAGE_KEY='tw_lotto_predictions_v1';
+function loadRecords(){try{const r=localStorage.getItem(STORAGE_KEY);return r?JSON.parse(r):{big:[],'539':[],pw:[]};}catch(e){return{big:[],'539':[],pw:[]};}}
+function saveRecords(r){try{localStorage.setItem(STORAGE_KEY,JSON.stringify(r));}catch(e){}}
+let RECORDS=loadRecords();
+let currentDBGame='big';
+
+function saveNewPrediction(game,pred,sp,date){
+  if(!RECORDS[game])RECORDS[game]=[];
+  const ex=RECORDS[game].find(r=>r.date===date);
+  if(ex){ex.pred=pred;ex.sp=sp;saveRecords(RECORDS);return;}
+  RECORDS[game].unshift({date,pred,sp,actual:null,hits:null,win:null,winLabel:null,savedAt:new Date().toISOString()});
+  if(RECORDS[game].length>90)RECORDS[game]=RECORDS[game].slice(0,90);
+  saveRecords(RECORDS);
+}
+
+function dbVerify(game,idx){
+  const r=RECORDS[game][idx];if(!r)return;
+  const cfg=CFG[game];const actual=[];
+  for(let i=0;i<cfg.pick;i++){const v=parseInt(document.getElementById(`dbv-${game}-${idx}-${i}`)?.value);if(v>=1&&v<=cfg.max)actual.push(v);}
+  if(actual.length<cfg.pick){alert(`請輸入${cfg.pick}個號碼`);return;}
+  const actualSp=cfg.hasSp?(parseInt(document.getElementById(`dbv-${game}-${idx}-sp`)?.value)||0):0;
+  const result=isWin(game,r.pred,actual,actualSp,r.sp||0);
+  r.actual=actual;r.hits=result.hits;r.win=result.win;r.winLabel=result.label;
+  saveRecords(RECORDS);renderDBList(game);
+}
+
+function openDB(){document.getElementById('db-panel').style.display='block';document.body.style.overflow='hidden';renderDBList(currentDBGame);}
+function closeDB(){document.getElementById('db-panel').style.display='none';document.body.style.overflow='';}
+
+function switchDB(game,el){
+  currentDBGame=game;
+  document.querySelectorAll('.db-tab').forEach(t=>t.classList.remove('on'));
+  el.classList.add('on');renderDBList(game);
+}
+
+function renderDBStats(game){
+  const records=RECORDS[game]||[];
+  const verified=records.filter(r=>r.actual);
+  const wins=verified.filter(r=>r.win);
+  const wr2=verified.length?(wins.length/verified.length*100).toFixed(0):'-';
+  document.getElementById('db-stats').innerHTML=`
+    <div class="db-stat"><div class="db-stat-val">${records.length}</div><div class="db-stat-lbl">總預測期數</div></div>
+    <div class="db-stat"><div class="db-stat-val">${verified.length}</div><div class="db-stat-lbl">已驗證期數</div></div>
+    <div class="db-stat"><div class="db-stat-val">${wins.length}</div><div class="db-stat-lbl">命中有獎次數</div></div>
+    <div class="db-stat"><div class="db-stat-val">${wr2}%</div><div class="db-stat-lbl">實際命中率</div></div>`;
+}
+
+function renderDBList(game){
+  renderDBStats(game);
+  const el=document.getElementById('db-list');
+  const records=RECORDS[game]||[];
+  const cfg=CFG[game];
+  if(!records.length){el.innerHTML='<div class="db-empty">尚無預測紀錄<br><span style="font-size:16px;margin-top:8px;display:block">按「立即生成預測」後會自動儲存</span></div>';return;}
+  el.innerHTML='';
+  records.forEach((r,idx)=>{
+    const item=document.createElement('div');item.className='db-item';
+    let winHtml=r.actual?(r.win?`<span class="db-win db-win-ok">✨ ${r.winLabel}</span>`:`<span class="db-win db-win-no">❌ ${r.winLabel||r.hits+'碼'}</span>`):`<span class="db-win db-win-pending">⏳ 待驗證</span>`;
+    const predBalls=r.pred.map(n=>{const isHit=r.actual&&r.actual.includes(n);const cls=r.actual?(isHit?'db-ball-hit':'db-ball-miss'):'db-ball-pred';return `<div class="db-ball ${cls}">${n<10?'0'+n:n}</div>`;}).join('');
+    let actualHtml='';
+    if(r.actual){const actBalls=r.actual.map(n=>`<div class="db-ball db-ball-actual">${n<10?'0'+n:n}</div>`).join('');actualHtml=`<div class="db-actual-row" style="margin-top:8px"><span style="color:var(--muted);font-size:15px">實際開獎：</span><div class="db-balls" style="margin-top:5px">${actBalls}</div></div>`;}
+    let verifyHtml='';
+    if(!r.actual){let inputs='';for(let i=0;i<cfg.pick;i++)inputs+=`<input type="number" class="db-vi" min="1" max="${cfg.max}" placeholder="#${i+1}" id="dbv-${game}-${idx}-${i}">`;if(cfg.hasSp)inputs+=`<input type="number" class="db-vi" min="1" max="${cfg.spMax}" placeholder="特" id="dbv-${game}-${idx}-sp">`;verifyHtml=`<div class="db-verify-row">${inputs}<button class="db-vbtn" onclick="dbVerify('${game}',${idx})">驗 證</button></div>`;}
+    item.innerHTML=`<div class="db-item-head"><span class="db-date">📅 ${r.date}</span>${winHtml}</div><div style="font-size:15px;color:var(--muted);margin-bottom:8px">預測號碼：</div><div class="db-balls">${predBalls}</div>${actualHtml}${verifyHtml}`;
+    el.appendChild(item);
+  });
+}
+
+// ---- 啟動 ----
 ['big','539','pw'].forEach(g=>initLatest(g));
+
 </script>
 </body>
 </html>

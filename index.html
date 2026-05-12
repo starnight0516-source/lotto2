@@ -140,7 +140,7 @@
   .dc b { color: var(--a3); }
 
   /* Balls */
-  .balls { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+  .balls { display: flex; flex-direction: row; flex-wrap: wrap; gap: 8px; align-items: center; }
   .ball {
     width:48px;
     height:48px;
@@ -304,7 +304,7 @@
     .header { padding: 16px 24px 14px; }
     .main { padding: 24px 24px 80px; }
     .card { padding: 22px; }
-    .balls { gap: 10px; }
+    .balls { flex-direction: row; flex-wrap: wrap; gap: 10px; }
     .gtab { padding: 14px 12px; }
   }
 
@@ -369,7 +369,7 @@
 
   /* 多組推薦 */
   .multi-rec{display:flex;flex-direction:column;gap:12px;margin-bottom:10px;}
-  .rec-group{background:var(--s2);border-radius:12px;padding:12px 14px;}
+  .rec-group{background:var(--s2);border-radius:12px;padding:12px 14px;} .rec-group .balls{flex-direction:row !important;flex-wrap:wrap !important;}
   .rec-group-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;flex-wrap:wrap;gap:6px;}
   .rec-label{font-size:15px;font-weight:600;}
   .rec-tag{font-size:11px;padding:2px 9px;border-radius:8px;font-family:'Courier New',monospace;}
@@ -1100,7 +1100,7 @@ async function gen(g){
     const head=document.createElement('div');head.className='rec-group-head';
     head.innerHTML=`<span class="rec-label">${label}</span><span class="rec-tag ${tagCls}">${tag}</span>`;
     gDiv.appendChild(head);
-    const bwrap=document.createElement('div');bwrap.className='bwrap';
+    const bwrap=document.createElement('div');bwrap.className='balls';
     nums.forEach(n=>bwrap.appendChild(mkBall(n,'bpred')));
     if(g==='pw'&&spNum){
       const lb=document.createElement('span');lb.className='splbl';lb.textContent='第二區';bwrap.appendChild(lb);

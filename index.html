@@ -6,8 +6,9 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="theme-color" content="#09090f">
-<title>台彩三合一智慧預測 v10</title>
+<title>台彩三合一智慧預測 v11</title>
 <style>
+
 
 
   :root {
@@ -365,6 +366,73 @@
   .top-method-highlight{background:rgba(0,229,160,0.08);border:0.5px solid rgba(0,229,160,0.2);border-radius:10px;padding:10px 14px;margin-bottom:10px;font-size:15px;}
   .top-method-highlight b{color:var(--a3);}
 
+
+  /* 多組推薦 */
+  .multi-rec{display:flex;flex-direction:column;gap:12px;margin-bottom:10px;}
+  .rec-group{background:var(--s2);border-radius:12px;padding:12px 14px;}
+  .rec-group-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;flex-wrap:wrap;gap:6px;}
+  .rec-label{font-size:15px;font-weight:600;}
+  .rec-tag{font-size:11px;padding:2px 9px;border-radius:8px;font-family:'Courier New',monospace;}
+  .rec-tag-1{background:rgba(0,229,160,0.15);color:var(--a3);border:0.5px solid rgba(0,229,160,0.3);}
+  .rec-tag-2{background:rgba(124,111,255,0.13);color:var(--a1);border:0.5px solid rgba(124,111,255,0.28);}
+  .rec-tag-3{background:rgba(255,199,77,0.12);color:var(--gold);border:0.5px solid rgba(255,199,77,0.3);}
+  .rec-desc{font-size:12px;color:var(--muted);margin-top:6px;line-height:1.5;}
+  .diff-badge{font-size:11px;color:var(--muted);margin-top:5px;}
+  .diff-badge b{color:var(--a3);}
+  /* 方法差異顏色標示 */
+  .engine-card{background:var(--s2);border:0.5px solid rgba(0,229,160,0.2);border-radius:14px;padding:16px;margin-bottom:12px;}
+  .engine-title{font-size:18px;font-weight:700;color:var(--a3);margin-bottom:12px;display:flex;align-items:center;gap:8px;}
+  .method-rank-row{display:flex;align-items:center;gap:8px;padding:8px 0;border-bottom:0.5px solid rgba(255,255,255,0.05);}
+  .method-rank-row:last-child{border-bottom:none;}
+  .rank-medal{font-size:18px;width:28px;flex-shrink:0;}
+  .method-rank-name{font-size:15px;font-weight:500;width:76px;flex-shrink:0;}
+  .method-bars{flex:1;display:flex;flex-direction:column;gap:3px;}
+  .mini-bar-row{display:flex;align-items:center;gap:5px;font-size:11px;color:var(--muted);}
+  .mini-bar-lbl{width:30px;flex-shrink:0;}
+  .mini-bar-bg{flex:1;height:6px;background:var(--s3);border-radius:3px;overflow:hidden;}
+  .mini-bar-fill{height:100%;border-radius:3px;}
+  .method-score{font-family:'Courier New',monospace;font-size:16px;font-weight:700;width:44px;text-align:right;flex-shrink:0;}
+  .trend-badge{font-size:14px;width:20px;text-align:center;flex-shrink:0;}
+  .engine-note{font-size:13px;color:var(--muted);line-height:1.7;margin-top:10px;padding-top:10px;border-top:0.5px solid rgba(255,255,255,0.06);}
+  .top-method-highlight{background:rgba(0,229,160,0.08);border:0.5px solid rgba(0,229,160,0.2);border-radius:10px;padding:10px 14px;margin-bottom:10px;font-size:15px;}
+  .top-method-highlight b{color:var(--a3);}
+  /* DB panel */
+  .db-panel{display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.85);z-index:999;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:16px;}
+  .db-inner{background:var(--s1);border-radius:18px;max-width:760px;margin:0 auto;padding:20px;min-height:80vh;}
+  .db-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;flex-wrap:wrap;gap:8px;}
+  .db-title{font-size:22px;font-weight:700;}
+  .db-close{padding:10px 18px;background:var(--s3);border:none;border-radius:10px;color:var(--text);font-size:16px;cursor:pointer;-webkit-appearance:none;}
+  .db-tabs{display:flex;gap:6px;margin-bottom:16px;flex-wrap:wrap;}
+  .db-tab{padding:10px 16px;background:var(--s2);border:0.5px solid var(--border);border-radius:10px;cursor:pointer;font-size:15px;color:var(--muted);-webkit-appearance:none;border:none;}
+  .db-tab.on{background:var(--a1);color:#fff;font-weight:600;}
+  .db-list{display:flex;flex-direction:column;gap:10px;}
+  .db-item{background:var(--s2);border:0.5px solid var(--border);border-radius:12px;padding:14px;}
+  .db-item-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;flex-wrap:wrap;gap:6px;}
+  .db-date{font-family:'Courier New',monospace;font-size:16px;font-weight:600;color:var(--a3);}
+  .db-win{font-size:14px;padding:4px 12px;border-radius:8px;}
+  .db-win-ok{background:rgba(0,229,160,0.15);color:var(--a3);}
+  .db-win-no{background:var(--s3);color:var(--muted);}
+  .db-win-pending{background:rgba(255,199,77,0.12);color:var(--gold);}
+  .db-balls{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:8px;align-items:center;}
+  .db-ball{width:40px;height:40px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:'Courier New',monospace;font-size:14px;font-weight:700;}
+  .db-ball-pred{background:rgba(124,111,255,0.14);border:1.5px solid var(--a1);color:var(--a1);}
+  .db-ball-hit{background:rgba(0,229,160,0.15);border:2px solid var(--a3);color:var(--a3);}
+  .db-ball-miss{background:var(--s3);border:0.5px solid rgba(255,255,255,0.1);color:var(--muted);}
+  .db-ball-actual{background:rgba(255,95,126,0.12);border:1.5px solid var(--a2);color:var(--a2);}
+  .db-actual-row{font-size:14px;color:var(--muted);margin-top:6px;}
+  .db-verify-row{margin-top:8px;display:flex;gap:5px;flex-wrap:wrap;align-items:center;}
+  .db-vi{width:46px;height:40px;background:var(--s3);border:0.5px solid var(--border);border-radius:8px;color:var(--text);font-family:'Courier New',monospace;font-size:15px;text-align:center;outline:none;-webkit-appearance:none;}
+  .db-vi:focus{border-color:var(--a1);}
+  .db-vbtn{padding:8px 16px;background:transparent;border:1px solid var(--a3);border-radius:8px;color:var(--a3);font-size:14px;cursor:pointer;-webkit-appearance:none;}
+  .db-empty{text-align:center;color:var(--muted);font-size:16px;padding:40px 0;}
+  .db-stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:10px;margin-bottom:16px;}
+  .db-stat{background:var(--s2);border-radius:12px;padding:12px;text-align:center;}
+  .db-stat-val{font-size:26px;font-weight:700;color:var(--a3);font-family:'Courier New',monospace;}
+  .db-stat-lbl{font-size:13px;color:var(--muted);margin-top:4px;}
+  .fab{position:fixed;bottom:24px;right:20px;width:60px;height:60px;border-radius:50%;background:linear-gradient(135deg,var(--a1),#5040c0);border:none;color:#fff;font-size:26px;cursor:pointer;z-index:500;box-shadow:0 4px 20px rgba(124,111,255,0.5);-webkit-appearance:none;display:flex;align-items:center;justify-content:center;}
+  .fab:active{transform:scale(0.92);}
+  .fab-label{position:fixed;bottom:24px;right:88px;background:var(--s1);border:0.5px solid var(--border);border-radius:10px;padding:8px 14px;font-size:14px;color:var(--text);z-index:500;white-space:nowrap;box-shadow:0 2px 12px rgba(0,0,0,0.4);}
+
 </style>
 </head>
 <body>
@@ -441,9 +509,7 @@
     </div>
     <div style="font-size:18px;color:var(--muted)">預測期別：<b id="nd-big" style="color:var(--text)">—</b></div>
     <div class="pslbl">主號 6 碼（1–49）</div>
-    <div class="balls" id="pb-big"></div>
-
-    <div class="bk-row" id="bk-big"></div>
+    <div id="multi-rec-big" class="multi-rec"></div>
     <div class="feat-row" id="ft-big"></div>
   </div>
 
@@ -510,8 +576,7 @@
     </div>
     <div style="font-size:18px;color:var(--muted)">預測期別：<b id="nd-539" style="color:var(--text)">—</b></div>
     <div class="pslbl">主號 5 碼（1–39）</div>
-    <div class="balls" id="pb-539"></div>
-    <div class="bk-row" id="bk-539"></div>
+    <div id="multi-rec-539" class="multi-rec"></div>
     <div class="feat-row" id="ft-539"></div>
   </div>
 
@@ -578,10 +643,7 @@
     </div>
     <div style="font-size:18px;color:var(--muted)">預測期別：<b id="nd-pw" style="color:var(--text)">—</b></div>
     <div class="pslbl">第一區 6 碼（1–38）</div>
-    <div class="balls" id="pb-pw"></div>
-    <div class="pslbl">第二區（1–8）</div>
-    <div class="balls" id="pp-pw"></div>
-    <div class="bk-row" id="bk-pw"></div>
+    <div id="multi-rec-pw" class="multi-rec"></div>
     <div class="feat-row" id="ft-pw"></div>
   </div>
 
@@ -610,21 +672,12 @@
 </div>
 
 </div><!-- end main -->
-<!-- 浮動查詢按鈕 -->
 <div class="fab-label">📋 預測紀錄</div>
-<button class="fab" onclick="openDB()" title="查詢預測紀錄">📋</button>
-<!-- 資料庫面板 -->
+<button class="fab" onclick="openDB()">📋</button>
 <div class="db-panel" id="db-panel">
   <div class="db-inner">
-    <div class="db-header">
-      <div class="db-title">📋 預測紀錄資料庫</div>
-      <button class="db-close" onclick="closeDB()">✕ 關閉</button>
-    </div>
-    <div class="db-tabs">
-      <button class="db-tab on" onclick="switchDB('big',this)">🎱 大樂透</button>
-      <button class="db-tab" onclick="switchDB('539',this)">🎯 今彩539</button>
-      <button class="db-tab" onclick="switchDB('pw',this)">⚡ 威力彩</button>
-    </div>
+    <div class="db-header"><div class="db-title">📋 預測紀錄資料庫</div><button class="db-close" onclick="closeDB()">✕ 關閉</button></div>
+    <div class="db-tabs"><button class="db-tab on" onclick="switchDB('big',this)">🎱 大樂透</button><button class="db-tab" onclick="switchDB('539',this)">🎯 今彩539</button><button class="db-tab" onclick="switchDB('pw',this)">⚡ 威力彩</button></div>
     <div class="db-stats" id="db-stats"></div>
     <div class="db-list" id="db-list"></div>
   </div>
@@ -734,7 +787,6 @@ const DB={
 const preds={big:null,'539':null,pw:null};
 const hist={big:[],'539':[],pw:[]};
 
-// ---- 工具函數 ----
 function freq(D,max){const f={};for(let i=1;i<=max;i++)f[i]=0;D.forEach(d=>d.n.forEach(n=>{if(n>=1&&n<=max)f[n]++;}));return f;}
 function sd(obj){return Object.entries(obj).map(([k,v])=>({n:parseInt(k),v})).sort((a,b)=>b.v-a.v);}
 function miss(D,max){const m={};for(let i=1;i<=max;i++){let l=D.length;for(let j=0;j<D.length;j++){if(D[j].n.includes(i)){l=j;break;}}m[i]=l;}return m;}
@@ -753,8 +805,7 @@ function getTWNow(){
 
 function nextDate(game){
   const dn=['日','一','二','三','四','五','六'];
-  const dd=CFG[game].drawDays;
-  const twnow=getTWNow();
+  const dd=CFG[game].drawDays;const twnow=getTWNow();
   const todayDay=twnow.getDay(),nowHour=twnow.getHours(),nowMin=twnow.getMinutes();
   const beforeDraw=(nowHour<20)||(nowHour===20&&nowMin<30);
   if(dd.includes(todayDay)&&beforeDraw){
@@ -774,121 +825,159 @@ function nextDate(game){
 function mkBall(n,cls){const d=document.createElement('div');d.className=`ball ${cls}`;d.textContent=n<10?'0'+n:String(n);return d;}
 function sleep(ms){return new Promise(r=>setTimeout(r,ms));}
 
-// ---- 10種預測方法 ----
+// ============ 12種真正差異化的預測方法 ============
 function methods(game){
   const {max,pick}=CFG[game];
-  const F=(D,mx)=>{const f={};for(let i=1;i<=mx;i++)f[i]=0;D.forEach(d=>d.n.forEach(n=>{if(n>=1&&n<=mx)f[n]++;}));return f;};
+  const F=(D,mx,n)=>{const f={};for(let i=1;i<=mx;i++)f[i]=0;D.slice(0,n||mx).forEach(d=>d.n.forEach(n=>{if(n>=1&&n<=mx)f[n]++;}));return f;};
   const M=(D,mx)=>{const m={};for(let i=1;i<=mx;i++){let l=D.length;for(let j=0;j<D.length;j++){if(D[j].n.includes(i)){l=j;break;}}m[i]=l;}return m;};
   const S=(f)=>Object.entries(f).map(([k,v])=>({n:parseInt(k),v})).sort((a,b)=>b.v-a.v);
+  const top=(f,pk,exclude=[])=>S(f).filter(x=>!exclude.includes(x.n)).slice(0,pk).map(x=>x.n);
+
   return[
-    {id:'hot',name:'熱門頻率',col:'#FAC775',p(D){return S(F(D.slice(0,Math.min(20,D.length)),max)).slice(0,pick).map(x=>x.n).sort((a,b)=>a-b);}},
-    {id:'cold',name:'冷號補位',col:'#B5D4F4',p(D){return S(M(D,max)).slice(0,pick).map(x=>x.n).sort((a,b)=>a-b);}},
-    {id:'mix',name:'冷熱均衡',col:'#AFA9EC',p(D){
-      const f=F(D.slice(0,Math.min(20,D.length)),max),m=M(D,max);
-      const h=S(f).slice(0,Math.ceil(pick/2)).map(x=>x.n);
-      const c=S(m).filter(x=>!h.includes(x.n)).slice(0,pick-h.length).map(x=>x.n);
-      return [...h,...c].sort((a,b)=>a-b);}},
-    {id:'oe',name:'奇偶平衡',col:'#F5C4B3',p(D){
-      const f=F(D.slice(0,Math.min(20,D.length)),max),s=S(f),h=Math.floor(pick/2);
-      return [...s.filter(x=>x.n%2===1).slice(0,pick-h),...s.filter(x=>x.n%2===0).slice(0,h)].map(x=>x.n).sort((a,b)=>a-b);}},
-    {id:'span',name:'跨度控制',col:'#E1F5EE',p(D){
-      const f=F(D.slice(0,Math.min(20,D.length)),max),s=S(f);
-      const C=s.slice(0,16).map(x=>x.n).sort((a,b)=>a-b),tg=Math.round(max*0.65);
-      let best=null,bs=999;
-      for(let i=0;i<=C.length-pick;i++){const co=C.slice(i,i+pick),sp=co[co.length-1]-co[0],sc=Math.abs(sp-tg);if(sc<bs){bs=sc;best=[...co];}}
-      return best||s.slice(0,pick).map(x=>x.n).sort((a,b)=>a-b);}},
-    {id:'hot10',name:'近10期熱',col:'#FFD700',p(D){return S(F(D.slice(0,Math.min(10,D.length)),max)).slice(0,pick).map(x=>x.n).sort((a,b)=>a-b);}},
-    {id:'tail',name:'尾數熱門',col:'#FF9F43',p(D){
-      const r=D.slice(0,Math.min(20,D.length));
-      const tf={};for(let i=0;i<=9;i++)tf[i]=0;
-      r.forEach(d=>d.n.forEach(n=>{if(n>=1&&n<=max)tf[n%10]++;}));
-      const ht=Object.entries(tf).sort((a,b)=>b[1]-a[1]).slice(0,4).map(x=>parseInt(x[0]));
-      const f=F(r,max),s=S(f);const picks=[];
-      ht.forEach(t=>{const c=s.filter(x=>x.n%10===t&&!picks.includes(x.n));if(c.length&&picks.length<pick)picks.push(c[0].n);});
-      let i=0;while(picks.length<pick){if(!picks.includes(s[i].n))picks.push(s[i].n);i++;}
-      return picks.sort((a,b)=>a-b);}},
-    {id:'zone_mix',name:'三區冷熱',col:'#9FE1CB',p(D){
-      const f=F(D.slice(0,Math.min(20,D.length)),max),m=M(D,max);
-      const z=Math.ceil(max/3),zones=[[1,z],[z+1,z*2],[z*2+1,max]];
-      const picks=[];
-      zones.forEach(([lo,hi])=>{
-        const inZ=Array.from({length:hi-lo+1},(_,k)=>k+lo);
-        const hot=inZ.slice().sort((a,b)=>(f[b]||0)-(f[a]||0));
-        const cold=inZ.slice().sort((a,b)=>(m[b]||0)-(m[a]||0));
-        for(const n of hot){if(!picks.includes(n)){picks.push(n);break;}}
-        for(const n of cold){if(!picks.includes(n)){picks.push(n);break;}}
-      });
-      const s=S(f);let i=0;
-      while(picks.length<pick){if(!picks.includes(s[i].n))picks.push(s[i].n);i++;}
-      return picks.slice(0,pick).sort((a,b)=>a-b);}},
-    {id:'consec2',name:'連號強化',col:'#FAECE7',p(D){
-      const r=D.slice(0,Math.min(15,D.length));
-      const cs={};for(let i=1;i<=max;i++)cs[i]=0;
-      r.forEach(d=>{const sv=[...d.n].sort((a,b)=>a-b);
-        for(let i=0;i<sv.length-1;i++){
-          if(sv[i+1]-sv[i]===1){cs[sv[i]]+=3;cs[sv[i+1]]+=3;}
-          else if(sv[i+1]-sv[i]===2){cs[sv[i]]+=1;cs[sv[i+1]]+=1;}
-        }});
-      const f=F(r,max),cb={};
-      for(let i=1;i<=max;i++)cb[i]=(f[i]||0)*1.2+(cs[i]||0)*2;
-      return S(cb).slice(0,pick).map(x=>x.n).sort((a,b)=>a-b);}},
-    {id:'decay_consec',name:'衰減+連號',col:'#A29BFE',p(D){
-      const f={};for(let i=1;i<=max;i++)f[i]=0;const w=Math.min(D.length,12);
-      for(let i=0;i<w;i++)D[i].n.forEach(n=>{if(n>=1&&n<=max)f[n]+=(w-i)*1.5;});
-      const cs={};for(let i=1;i<=max;i++)cs[i]=0;
-      D.slice(0,10).forEach(d=>{const sv=[...d.n].sort((a,b)=>a-b);
-        for(let i=0;i<sv.length-1;i++){if(sv[i+1]-sv[i]===1){cs[sv[i]]+=3;cs[sv[i+1]]+=3;}}});
-      const cb={};for(let i=1;i<=max;i++)cb[i]=(f[i]||0)+(cs[i]||0);
-      return S(cb).slice(0,pick).map(x=>x.n).sort((a,b)=>a-b);}},
+    // --- 熱門系 ---
+    {id:'hot20',name:'近20期熱',col:'#FAC775',
+      desc:'近20期出現次數最多的號碼',
+      p(D){return top(F(D,max,20),pick).sort((a,b)=>a-b);}},
+
+    {id:'hot10',name:'近10期熱',col:'#FFD700',
+      desc:'只看最近10期，捕捉短期趨勢',
+      p(D){return top(F(D,max,10),pick).sort((a,b)=>a-b);}},
+
+    {id:'hot5',name:'近5期超熱',col:'#ff9f43',
+      desc:'近5期出現2次以上的號碼，最新鮮的趨勢',
+      p(D){
+        const f=F(D,max,5);
+        const hot2=[...S(f).filter(x=>x.v>=2).map(x=>x.n)];
+        const s=S(F(D,max,20));
+        let i=0;while(hot2.length<pick){if(!hot2.includes(s[i].n))hot2.push(s[i].n);i++;}
+        return hot2.slice(0,pick).sort((a,b)=>a-b);}},
+
+    // --- 冷門系 ---
+    {id:'cold',name:'冷號補位',col:'#B5D4F4',
+      desc:'遺漏最久的號碼，等待回補',
+      p(D){return S(M(D,max)).slice(0,pick).map(x=>x.n).sort((a,b)=>a-b);}},
+
+    {id:'miss_hot',name:'遺漏熱複合',col:'#74b9ff',
+      desc:'遺漏值高且歷史頻率也高（冷熱交叉）',
+      p(D){
+        const f=F(D,max,20);const m=M(D,max);
+        const maxM=Math.max(...Object.values(m));
+        const maxF=Math.max(...Object.values(f),1);
+        const score={};for(let i=1;i<=max;i++)score[i]=(m[i]/maxM)*0.6+(f[i]/maxF)*0.4;
+        return S(score).slice(0,pick).map(x=>x.n).sort((a,b)=>a-b);}},
+
+    // --- 奇偶/大小 ---
+    {id:'oe_odd',name:'3奇2偶',col:'#a29bfe',
+      desc:'固定3奇2偶，從各自頻率中選',
+      p(D){
+        const f=F(D,max,20);const s=S(f);
+        const h=Math.floor(pick/2);
+        return [...s.filter(x=>x.n%2===1).slice(0,pick-h),...s.filter(x=>x.n%2===0).slice(0,h)].map(x=>x.n).sort((a,b)=>a-b);}},
+
+    {id:'oe_even',name:'2奇3偶',col:'#fd79a8',
+      desc:'固定2奇3偶，從低頻區域選，與3奇2偶互補',
+      p(D){
+        const f=F(D,max,20);const s=S(f);
+        // 取奇數中頻率第3~5名、偶數中頻率前3名，避免和3奇2偶重複
+        const odds=s.filter(x=>x.n%2===1).slice(Math.floor(pick/2),Math.floor(pick/2)+2).map(x=>x.n);
+        const evens=s.filter(x=>x.n%2===0).slice(0,pick-odds.length).map(x=>x.n);
+        return [...odds,...evens].sort((a,b)=>a-b);}},
+
+    // --- 分區系 ---
+    {id:'zone3',name:'三區均衡',col:'#9FE1CB',
+      desc:'低中高三區各取1-2個，確保號碼分散',
+      p(D){
+        const f=F(D,max,20);const s=S(f);const z=Math.ceil(max/3);
+        const a=s.filter(x=>x.n<=z).slice(0,2).map(x=>x.n);
+        const b=s.filter(x=>x.n>z&&x.n<=z*2).slice(0,2).map(x=>x.n);
+        const c=s.filter(x=>x.n>z*2).slice(0,pick-a.length-b.length).map(x=>x.n);
+        return [...a,...b,...c].slice(0,pick).sort((a,b)=>a-b);}},
+
+    // --- 連號系 ---
+    {id:'consec',name:'連號強化',col:'#FAECE7',
+      desc:'近期有連號的號碼，加倍得分',
+      p(D){
+        const r=D.slice(0,Math.min(15,D.length));
+        const cs={};for(let i=1;i<=max;i++)cs[i]=0;
+        r.forEach(d=>{const sv=[...d.n].sort((a,b)=>a-b);
+          for(let i=0;i<sv.length-1;i++){
+            if(sv[i+1]-sv[i]===1){cs[sv[i]]+=3;cs[sv[i+1]]+=3;}
+            else if(sv[i+1]-sv[i]===2){cs[sv[i]]+=1;cs[sv[i+1]]+=1;}
+          }});
+        const f=F(D,max,20);const cb={};
+        for(let i=1;i<=max;i++)cb[i]=(f[i]||0)*1.2+(cs[i]||0)*2;
+        return S(cb).slice(0,pick).map(x=>x.n).sort((a,b)=>a-b);}},
+
+    // --- 衰減系 ---
+    {id:'decay',name:'衰減加權',col:'#CEC0F6',
+      desc:'近期開出的號碼權重較高，越舊越低',
+      p(D){
+        const f={};for(let i=1;i<=max;i++)f[i]=0;const w=Math.min(D.length,15);
+        for(let i=0;i<w;i++)D[i].n.forEach(n=>{if(n>=1&&n<=max)f[n]+=(w-i);});
+        return S(f).slice(0,pick).map(x=>x.n).sort((a,b)=>a-b);}},
+
+    // --- 版路系（已驗證有效）---
+    {id:'banlu_sum',name:'和值版路',col:'#00cec9',
+      desc:'【版路】找和值相近的歷史期次，看其下一期（回測+8.4%）',
+      p(D){
+        if(D.length<15)return S(F(D,max,20)).slice(0,pick).map(x=>x.n).sort((a,b)=>a-b);
+        const latSum=D[0].n.reduce((a,b)=>a+b,0);
+        const range=Math.ceil(max*0.4);
+        const nxt={};for(let i=1;i<=max;i++)nxt[i]=0;let found=0;
+        for(let i=1;i<D.length-1;i++){
+          const diff=Math.abs(D[i].n.reduce((a,b)=>a+b,0)-latSum);
+          if(diff<=range){D[i-1].n.forEach(n=>{if(n>=1&&n<=max)nxt[n]+=Math.max(1,range-diff);});found++;}
+        }
+        if(found<3)return S(F(D,max,20)).slice(0,pick).map(x=>x.n).sort((a,b)=>a-b);
+        return S(nxt).slice(0,pick).map(x=>x.n).sort((a,b)=>a-b);}},
+
+    {id:'banlu_combo',name:'綜合版路',col:'#6c5ce7',
+      desc:'【版路】多維度相似歷史期次→下一期（威力彩+2.2%）',
+      p(D){
+        if(D.length<15)return S(F(D,max,20)).slice(0,pick).map(x=>x.n).sort((a,b)=>a-b);
+        const latest=D[0].n;
+        const latOE=latest.filter(n=>n%2===1).length;
+        const latSum=latest.reduce((a,b)=>a+b,0);
+        const latSpan=Math.max(...latest)-Math.min(...latest);
+        const nxt={};for(let i=1;i<=max;i++)nxt[i]=0;const matches=[];
+        for(let i=1;i<D.length-1;i++){
+          const d=D[i].n;let score=0;
+          score+=d.filter(n=>latest.includes(n)).length*3;
+          if(d.filter(n=>n%2===1).length===latOE)score+=2;
+          const sd2=Math.abs(d.reduce((a,b)=>a+b,0)-latSum);
+          if(sd2<=Math.ceil(max*0.3))score+=2;if(sd2<=Math.ceil(max*0.15))score+=1;
+          if(Math.abs((Math.max(...d)-Math.min(...d))-latSpan)<=6)score+=1;
+          if(score>=3)matches.push({score,next:D[i-1].n});
+        }
+        matches.sort((a,b)=>b.score-a.score);
+        matches.slice(0,8).forEach((m,r)=>{const w=m.score*(8-r);m.next.forEach(n=>{if(n>=1&&n<=max)nxt[n]+=w;});});
+        if(matches.length<3)return S(F(D,max,20)).slice(0,pick).map(x=>x.n).sort((a,b)=>a-b);
+        return S(nxt).slice(0,pick).map(x=>x.n).sort((a,b)=>a-b);}},
   ];
 }
 
 function getPwSp(D){const sf={};for(let i=1;i<=8;i++)sf[i]=0;D.slice(0,20).forEach(d=>{if(d.s>=1&&d.s<=8)sf[d.s]++;});return sd(sf)[0].n;}
 
-// ---- 🆕 動態加權引擎（核心優化）----
-function calcDynamicWeight(methodFn, D, game){
-  const minHit = game==='539' ? 2 : 3;
-  const spPredFn = game==='pw' ? getPwSp : ()=>0;
-
-  function hitRate(nRecent){
+// ============ 動態加權引擎 ============
+function calcDynamicWeight(methodFn,D,game){
+  const minHit=game==='539'?2:3;
+  const spFn=game==='pw'?getPwSp:()=>0;
+  function wr(n){
     let wins=0,total=0;
-    for(let i=0;i<Math.min(nRecent,D.length-8);i++){
-      const train=D.slice(i+1);
-      if(train.length<8)continue;
-      const pred=methodFn(train);
-      const spPred=spPredFn(train);
-      const result=isWin(game,pred,D[i].n,D[i].s,spPred);
-      if(result.win)wins++;
+    for(let i=0;i<Math.min(n,D.length-8);i++){
+      const train=D.slice(i+1);if(train.length<8)continue;
+      const pred=methodFn(train);const spPred=spFn(train);
+      if(isWin(game,pred,D[i].n,D[i].s,spPred).win)wins++;
       total++;
     }
     return total>0?wins/total:0;
   }
-
-  const r5  = hitRate(5);   // 近5期（短期趨勢，最重要）
-  const r20 = hitRate(20);  // 近20期（中期）
-  const rAll= hitRate(D.length); // 全期（基準）
-
-  // 動態加權：近期好的方法權重更高
-  const score = r5*0.60 + r20*0.30 + rAll*0.10;
-
-  // 近5期全空則給極低權重（不完全淘汰，避免過擬合）
-  const finalScore = r5===0 ? Math.max(score, 0.02) : Math.max(score, 0.03);
-
-  return {score:finalScore, r5, r20, rAll};
+  const r5=wr(5),r20=wr(20),rAll=wr(D.length);
+  const score=r5*0.60+r20*0.30+rAll*0.10;
+  return{score:Math.max(score,r5===0?0.02:0.03),r5,r20,rAll};
 }
 
-// ---- 回測（只用於顯示歷史命中率）----
-function simpleBacktest(game){
-  const M=methods(game),D=DB[game],res={};M.forEach(m=>res[m.id]=[]);
-  for(let i=0;i<D.length-10;i++){
-    const train=D.slice(i+1);if(train.length<10)continue;
-    const spPred=game==='pw'?getPwSp(train):0;
-    M.forEach(m=>{const pred=m.p(train);const w=isWin(game,pred,D[i].n,D[i].s,spPred);res[m.id].push({win:w.win,hits:w.hits});});
-  }
-  return res;
-}
-
-// ---- 初始化 ----
+// ============ 初始化 ============
 function initLatest(g){
   const l=DB[g][0];
   document.getElementById(`d-${g}`).textContent=l.d;
@@ -896,7 +985,7 @@ function initLatest(g){
   l.n.forEach(n=>el.appendChild(mkBall(n,'bn')));
   if(CFG[g].hasSp&&l.s){const lb=document.createElement('span');lb.className='splbl';lb.textContent='特';el.appendChild(lb);el.appendChild(mkBall(l.s,'bpw2'));}
   const dc=document.getElementById(`dc-${g}`);
-  if(dc)dc.innerHTML=`✅ <b>${DB[g].length}</b> 期真實資料｜自我優化引擎 v10`;
+  if(dc)dc.innerHTML=`✅ <b>${DB[g].length}</b> 期真實資料｜v11 差異化3組選號`;
   buildInputs(g);
 }
 
@@ -917,21 +1006,20 @@ function addDraw(g){
   nums.sort((a,b)=>a-b);
   let sp=0;if(cfg.hasSp){sp=parseInt(document.getElementById(`u-${g}-sp`)?.value)||0;}
   const tw=getTWNow(),dd=`${String(tw.getMonth()+1).padStart(2,'0')}/${String(tw.getDate()).padStart(2,'0')}`;
-  if(DB[g].find(d=>d.d===dd)){alert(`${dd} 的資料已存在！`);return;}
+  if(DB[g].find(d=>d.d===dd)){alert(`${dd} 資料已存在！`);return;}
   DB[g].unshift({d:dd,n:nums,s:sp});
   initLatest(g);
-  alert(`✅ 已加入 ${dd}（${nums.join(', ')}）\n資料庫現有 ${DB[g].length} 期\n\n請按「立即生成」重新預測！系統會自動用最新資料重新評估各方法表現。`);
+  alert(`✅ 已加入 ${dd}（${nums.join(', ')}），現有 ${DB[g].length} 期\n請按「立即生成」重新預測！`);
 }
 
-// ---- 🆕 核心生成函數（動態優化版）----
+// ============ 生成函數（3組差異化選號）============
 async function gen(g){
   const D=DB[g];
   const STEPS=[
     `載入 ${D.length} 期真實資料`,
-    '評估各方法近5期命中率（短期趨勢）',
-    '評估近20期命中率（中期穩定性）',
-    '動態加權：近期強的方法獲得更高話語權',
-    '最優方法組合投票→產出預測號碼'
+    '計算12種差異化方法各自選號',
+    '動態評估近期命中率（近5期權重60%）',
+    '加權投票→產出3組不同選號'
   ];
   const prog=document.getElementById(`prog-${g}`);
   prog.style.display='block';
@@ -940,7 +1028,6 @@ async function gen(g){
   const lbl=document.getElementById(`pl-${g}`);
   const stEl=document.getElementById(`st-${g}`);stEl.innerHTML='';
   const sEls=STEPS.map(s=>{const d=document.createElement('div');d.className='step';d.innerHTML=`<div class="sdot">↻</div><span>${s}</span>`;stEl.appendChild(d);return d;});
-
   for(let i=0;i<STEPS.length;i++){
     sEls[i].classList.add('on');lbl.textContent=STEPS[i]+'...';
     fill.style.width=`${(i+0.5)/STEPS.length*100}%`;
@@ -952,40 +1039,96 @@ async function gen(g){
   const cfg=CFG[g];
   const M=methods(g);
 
-  // 計算動態權重
+  // 動態加權
   const methodScores=M.map(m=>{
     const ws=calcDynamicWeight(m.p,D,g);
-    return {...m,...ws};
+    return{...m,...ws};
   }).sort((a,b)=>b.score-a.score);
 
-  // 動態加權投票
+  // 所有票數
   const votes={};for(let i=1;i<=cfg.max;i++)votes[i]=0;
   methodScores.forEach(m=>{
     const pred=m.p(D);
     pred.forEach(n=>{if(n>=1&&n<=cfg.max)votes[n]+=m.score;});
   });
-
   const vs=sd(votes);
-  const topN=vs.slice(0,cfg.pick).map(x=>x.n).sort((a,b)=>a-b);
-  const backup=vs.slice(cfg.pick,cfg.pick+4).map(x=>x.n);
+
+  // 🎯 組合1：最高票數（主推）
+  const group1=vs.slice(0,cfg.pick).map(x=>x.n).sort((a,b)=>a-b);
+
+  // 🎲 組合2：排除組1號碼，從最高命中率方法前2名各取，再補票數高的
+  const top2Methods=methodScores.slice(0,2);
+  const g2candidates=new Set();
+  top2Methods.forEach(m=>{
+    m.p(D).forEach(n=>{if(!group1.includes(n))g2candidates.add(n);});
+  });
+  // 補足：從全票單中選非組1的
+  vs.forEach(({n})=>{if(!group1.includes(n))g2candidates.add(n);});
+  const group2=[...g2candidates].slice(0,cfg.pick).sort((a,b)=>a-b);
+
+  // 🔮 組合3：冷熱均衡（熱門一半+冷門一半），確保和組1、2都不同
+  const hotHalf=vs.slice(0,Math.ceil(cfg.pick/2)).map(x=>x.n);
+  const missAll=Object.entries((() =>{
+    const m={};for(let i=1;i<=cfg.max;i++){let l=D.length;for(let j=0;j<D.length;j++){if(D[j].n.includes(i)){l=j;break;}}m[i]=l;}return m;
+  })()).sort((a,b)=>b[1]-a[1]).map(([k])=>parseInt(k));
+  const coldHalf=missAll.filter(n=>!hotHalf.includes(n)).slice(0,cfg.pick-hotHalf.length);
+  const group3=[...hotHalf,...coldHalf].sort((a,b)=>a-b);
+
+  // 威力彩第二區
   let spNum=null;
   if(g==='pw'){spNum=getPwSp(D);}
 
   const nd=nextDate(g);
   document.getElementById(`nd-${g}`).textContent=nd;
-  const pb=document.getElementById(`pb-${g}`);pb.innerHTML='';
-  topN.forEach(n=>pb.appendChild(mkBall(n,'bpred')));
-  if(g==='pw'&&spNum){const pp=document.getElementById(`pp-${g}`);pp.innerHTML='';pp.appendChild(mkBall(spNum,'bpred-pw'));}
-  document.getElementById(`bk-${g}`).textContent=backup.length?`備選：${backup.join('  ')}　（包牌參考）`:'';
-  const sm=topN.reduce((a,b)=>a+b,0),oe=topN.filter(n=>n%2===1).length;
-  document.getElementById(`ft-${g}`).innerHTML=`<span>總和 <b>${sm}</b></span><span>奇偶 <b>${oe}奇${topN.length-oe}偶</b></span><span>跨度 <b>${topN[topN.length-1]-topN[0]}</b></span>`;
+
+  // 渲染3組選號
+  const recContainer=document.getElementById(`multi-rec-${g}`);
+  recContainer.innerHTML='';
+  recContainer.className='multi-rec';
+
+  const groups=[
+    {nums:group1,label:'🥇 主推組合',tag:'最高命中率加權',tagCls:'rec-tag-1',
+     desc:'由12種方法依近期命中率加權投票，得票最高的號碼'},
+    {nums:group2,label:'🥈 備選組合A',tag:'頂尖方法主導',tagCls:'rec-tag-2',
+     desc:`由近期命中率最高的「${methodScores[0].name}」與「${methodScores[1].name}」主導選出`},
+    {nums:group3,label:'🥉 備選組合B',tag:'冷熱均衡',tagCls:'rec-tag-3',
+     desc:'熱門號+遺漏最久的冷號均衡組合，風格與主推不同'},
+  ];
+
+  groups.forEach(({nums,label,tag,tagCls,desc})=>{
+    const gDiv=document.createElement('div');gDiv.className='rec-group';
+    const head=document.createElement('div');head.className='rec-group-head';
+    head.innerHTML=`<span class="rec-label">${label}</span><span class="rec-tag ${tagCls}">${tag}</span>`;
+    gDiv.appendChild(head);
+    const bwrap=document.createElement('div');bwrap.className='bwrap';
+    nums.forEach(n=>bwrap.appendChild(mkBall(n,'bpred')));
+    if(g==='pw'&&spNum){
+      const lb=document.createElement('span');lb.className='splbl';lb.textContent='第二區';bwrap.appendChild(lb);
+      bwrap.appendChild(mkBall(spNum,'bpred-pw'));
+    }
+    gDiv.appendChild(bwrap);
+    const descDiv=document.createElement('div');descDiv.className='rec-desc';descDiv.textContent=desc;gDiv.appendChild(descDiv);
+    // 與主推的差異
+    if(nums!==group1){
+      const diff=nums.filter(n=>!group1.includes(n));
+      const diffDiv=document.createElement('div');diffDiv.className='diff-badge';
+      diffDiv.innerHTML=`與主推不同的號碼：<b>${diff.length>0?diff.join('、'):'完全不同'}</b>`;
+      gDiv.appendChild(diffDiv);
+    }
+    recContainer.appendChild(gDiv);
+  });
+
+  // 特徵
+  const sm=group1.reduce((a,b)=>a+b,0),oe=group1.filter(n=>n%2===1).length;
+  document.getElementById(`ft-${g}`).innerHTML=
+    `<span>主推總和 <b>${sm}</b></span><span>奇偶 <b>${oe}奇${group1.length-oe}偶</b></span><span>跨度 <b>${group1[group1.length-1]-group1[0]}</b></span>`;
 
   // 渲染動態排名
-  renderEngineRank(g, methodScores);
+  renderEngineRank(g,methodScores);
 
-  preds[g]={pred:topN,sp:spNum,date:nd};
-  saveNewPrediction(g,topN,spNum,nd);
-  hist[g].unshift({date:nd,pred:topN,sp:spNum,hit:null,win:null,winLabel:null});
+  preds[g]={pred:group1,pred2:group2,pred3:group3,sp:spNum,date:nd};
+  saveNewPrediction(g,group1,spNum,nd,group2,group3);
+  hist[g].unshift({date:nd,pred:group1,sp:spNum,hit:null,win:null,winLabel:null});
   renderHist(g);
 
   await sleep(200);
@@ -994,62 +1137,37 @@ async function gen(g){
   document.getElementById(`pc-${g}`).scrollIntoView({behavior:'smooth',block:'start'});
 }
 
-// ---- 渲染動態排名（引擎狀態）----
-function renderEngineRank(g, methodScores){
+function renderEngineRank(g,methodScores){
   const el=document.getElementById(`rl-${g}`);el.innerHTML='';
-  const maxScore=Math.max(...methodScores.map(m=>m.score),0.01);
   const top=methodScores[0];
-
-  // 最佳方法高亮
-  const topDiv=document.createElement('div');
-  topDiv.className='top-method-highlight';
-  topDiv.innerHTML=`🏆 當前最優方法：<b>${top.name}</b>　近5期命中率 <b style="color:var(--a3)">${(top.r5*100).toFixed(0)}%</b>　綜合分 <b style="color:var(--gold)">${(top.score*100).toFixed(1)}%</b>`;
+  const topDiv=document.createElement('div');topDiv.className='top-method-highlight';
+  topDiv.innerHTML=`🏆 當前最優：<b>${top.name}</b>　近5期 <b style="color:var(--a3)">${(top.r5*100).toFixed(0)}%</b>　綜合 <b style="color:var(--gold)">${(top.score*100).toFixed(1)}%</b>`;
   el.appendChild(topDiv);
-
+  const maxScore=Math.max(...methodScores.map(m=>m.score),0.01);
+  const medals=['🥇','🥈','🥉','4️⃣','5️⃣','6️⃣','7️⃣','8️⃣','9️⃣','🔟','⓫','⓬'];
   methodScores.forEach((m,i)=>{
     const row=document.createElement('div');row.className='method-rank-row';
-    const medals=['🥇','🥈','🥉','4️⃣','5️⃣','6️⃣','7️⃣','8️⃣','9️⃣','🔟'];
-    const scoreColor=m.score>0.2?'var(--a3)':m.score>0.1?'var(--gold)':'var(--muted)';
-
-    // 趨勢：近5期 vs 近20期
-    let trend='→';
-    if(m.r5>m.r20*1.2)trend='↑';
-    else if(m.r5<m.r20*0.8)trend='↓';
-    const trendColor=trend==='↑'?'var(--a3)':trend==='↓'?'var(--a2)':'var(--muted)';
-
+    const col=m.score>0.2?'var(--a3)':m.score>0.1?'var(--gold)':'var(--muted)';
+    let trend='→';if(m.r5>m.r20*1.2)trend='↑';else if(m.r5<m.r20*0.8)trend='↓';
+    const tc=trend==='↑'?'var(--a3)':trend==='↓'?'var(--a2)':'var(--muted)';
     row.innerHTML=`
       <span class="rank-medal">${medals[i]||i+1}</span>
       <span class="method-rank-name">${m.name}</span>
       <div class="method-bars">
-        <div class="mini-bar-row">
-          <span class="mini-bar-lbl">近5期</span>
-          <div class="mini-bar-bg"><div class="mini-bar-fill" style="width:${Math.round(m.r5/Math.max(methodScores[0].r5,0.01)*100)}%;background:#00e5a0"></div></div>
-          <span style="font-size:12px;color:var(--a3);width:32px;text-align:right">${(m.r5*100).toFixed(0)}%</span>
-        </div>
-        <div class="mini-bar-row">
-          <span class="mini-bar-lbl">近20期</span>
-          <div class="mini-bar-bg"><div class="mini-bar-fill" style="width:${Math.round(m.r20/Math.max(methodScores[0].r20,0.01)*100)}%;background:#7c6fff"></div></div>
-          <span style="font-size:12px;color:var(--a1);width:32px;text-align:right">${(m.r20*100).toFixed(0)}%</span>
-        </div>
+        <div class="mini-bar-row"><span class="mini-bar-lbl">近5期</span><div class="mini-bar-bg"><div class="mini-bar-fill" style="width:${Math.round(m.r5/Math.max(methodScores[0].r5,0.01)*100)}%;background:#00e5a0"></div></div><span style="font-size:12px;color:var(--a3);width:32px;text-align:right">${(m.r5*100).toFixed(0)}%</span></div>
+        <div class="mini-bar-row"><span class="mini-bar-lbl">近20期</span><div class="mini-bar-bg"><div class="mini-bar-fill" style="width:${Math.round(m.r20/Math.max(methodScores[0].r20,0.01)*100)}%;background:#7c6fff"></div></div><span style="font-size:12px;color:var(--a1);width:32px;text-align:right">${(m.r20*100).toFixed(0)}%</span></div>
       </div>
-      <span class="trend-badge" style="color:${trendColor}">${trend}</span>
-      <span class="method-score" style="color:${scoreColor}">${(m.score*100).toFixed(1)}%</span>`;
+      <span class="trend-badge" style="color:${tc}">${trend}</span>
+      <span class="method-score" style="color:${col}">${(m.score*100).toFixed(1)}%</span>`;
     el.appendChild(row);
   });
-
   const noteEl=document.getElementById(`hn-${g}`);
   if(noteEl){
-    const activeCount=methodScores.filter(m=>m.r5>0).length;
-    noteEl.innerHTML=`
-      <div class="engine-note">
-        📊 動態優化引擎 v10｜${DB[g].length} 期真實資料<br>
-        🔄 近5期有效方法 <b style="color:var(--a3)">${activeCount}</b> / ${methodScores.length} 種<br>
-        💡 <b>每次開獎後</b>：輸入實際號碼 → 點「加入資料庫」→ 重新生成，系統自動重新評估各方法並優化權重
-      </div>`;
+    const active=methodScores.filter(m=>m.r5>0).length;
+    noteEl.innerHTML=`<div class="engine-note">📊 動態引擎 v11｜${DB[g].length}期真實資料<br>🔄 近5期有效方法 <b style="color:var(--a3)">${active}</b>/${methodScores.length} 種<br>💡 開獎後輸入號碼→加入資料庫→重新生成，系統自動重新評估權重</div>`;
   }
 }
 
-// ---- 驗證 ----
 function verify(g){
   const p=preds[g];if(!p){alert('請先生成預測！');return;}
   const cfg=CFG[g];const actual=[];
@@ -1057,8 +1175,14 @@ function verify(g){
   if(actual.length<cfg.pick){alert(`請輸入${cfg.pick}個號碼`);return;}
   const actualSp=cfg.hasSp?(parseInt(document.getElementById(`v-${g}-sp`)?.value)||0):0;
   const result=isWin(g,p.pred,actual,actualSp,p.sp||0);
+  // 也檢查備選組合
+  const r2=p.pred2?isWin(g,p.pred2,actual,actualSp,p.sp||0):null;
+  const r3=p.pred3?isWin(g,p.pred3,actual,actualSp,p.sp||0):null;
   document.getElementById(`vh-${g}`).textContent=result.hits;
-  document.getElementById(`vl-${g}`).textContent=result.win?`${result.label} ✨ 有獎！`:`${result.label}（未達門檻）`;
+  let lbl=result.win?`${result.label} ✨ 有獎！`:`${result.label}（未達門檻）`;
+  if(r2&&r2.win)lbl+=`　備選A：${r2.label} ✨`;
+  if(r3&&r3.win)lbl+=`　備選B：${r3.label} ✨`;
+  document.getElementById(`vl-${g}`).textContent=lbl;
   const vb=document.getElementById(`vb-${g}`);vb.innerHTML='';
   p.pred.forEach(n=>vb.appendChild(mkBall(n,actual.includes(n)?'bhit':'bn')));
   document.getElementById(`vr-${g}`).style.display='block';
@@ -1068,7 +1192,6 @@ function verify(g){
   renderHist(g);
 }
 
-// ---- 歷史 ----
 function renderHist(g){
   const el=document.getElementById(`hl-${g}`);el.innerHTML='';
   if(!hist[g].length){el.innerHTML='<div style="font-size:18px;color:var(--muted)">尚無紀錄</div>';return;}
@@ -1076,13 +1199,11 @@ function renderHist(g){
     const item=document.createElement('div');item.className='hitem';
     const hb=h.hit===null?'<span class="hsm hno">待驗證</span>':h.win?`<span class="hsm hok">✨ ${h.winLabel}</span>`:`<span class="hsm hno">${h.winLabel||h.hit+'碼'}</span>`;
     const balls=h.pred.map(n=>`<div class="mb" style="background:rgba(124,111,255,0.12);border:0.5px solid rgba(124,111,255,0.28);color:var(--a1)">${n<10?'0'+n:n}</div>`).join('');
-    const spStr=h.sp?`<span class="splbl">特</span><div class="mb" style="background:rgba(255,95,126,0.1);border:0.5px solid rgba(255,95,126,0.28);color:#ff9aaa">${h.sp<10?'0'+h.sp:h.sp}</div>`:'';
-    item.innerHTML=`<div class="hd">${h.date} ${hb}</div><div class="hballs">${balls}${spStr}</div>`;
+    item.innerHTML=`<div class="hd">${h.date} ${hb}</div><div class="hballs">${balls}</div>`;
     el.appendChild(item);
   });
 }
 
-// ---- Tab 切換 ----
 function sw(game,el){
   document.querySelectorAll('.gtab').forEach(t=>t.classList.remove('on'));
   document.querySelectorAll('.gpane').forEach(p=>p.classList.remove('on'));
@@ -1090,18 +1211,16 @@ function sw(game,el){
   window.scrollTo({top:0,behavior:'smooth'});
 }
 
-// ---- localStorage 預測紀錄 ----
 const STORAGE_KEY='tw_lotto_predictions_v1';
 function loadRecords(){try{const r=localStorage.getItem(STORAGE_KEY);return r?JSON.parse(r):{big:[],'539':[],pw:[]};}catch(e){return{big:[],'539':[],pw:[]};}}
 function saveRecords(r){try{localStorage.setItem(STORAGE_KEY,JSON.stringify(r));}catch(e){}}
-let RECORDS=loadRecords();
-let currentDBGame='big';
+let RECORDS=loadRecords();let currentDBGame='big';
 
-function saveNewPrediction(game,pred,sp,date){
+function saveNewPrediction(game,pred,sp,date,pred2,pred3){
   if(!RECORDS[game])RECORDS[game]=[];
   const ex=RECORDS[game].find(r=>r.date===date);
-  if(ex){ex.pred=pred;ex.sp=sp;saveRecords(RECORDS);return;}
-  RECORDS[game].unshift({date,pred,sp,actual:null,hits:null,win:null,winLabel:null,savedAt:new Date().toISOString()});
+  if(ex){ex.pred=pred;ex.pred2=pred2;ex.pred3=pred3;ex.sp=sp;saveRecords(RECORDS);return;}
+  RECORDS[game].unshift({date,pred,pred2,pred3,sp,actual:null,hits:null,win:null,winLabel:null,savedAt:new Date().toISOString()});
   if(RECORDS[game].length>90)RECORDS[game]=RECORDS[game].slice(0,90);
   saveRecords(RECORDS);
 }
@@ -1113,52 +1232,44 @@ function dbVerify(game,idx){
   if(actual.length<cfg.pick){alert(`請輸入${cfg.pick}個號碼`);return;}
   const actualSp=cfg.hasSp?(parseInt(document.getElementById(`dbv-${game}-${idx}-sp`)?.value)||0):0;
   const result=isWin(game,r.pred,actual,actualSp,r.sp||0);
-  r.actual=actual;r.hits=result.hits;r.win=result.win;r.winLabel=result.label;
+  const r2=r.pred2?isWin(game,r.pred2,actual,actualSp,r.sp||0):null;
+  const r3=r.pred3?isWin(game,r.pred3,actual,actualSp,r.sp||0):null;
+  let label=result.label;
+  if(r2&&r2.win)label+=`｜備A:${r2.label}✨`;
+  if(r3&&r3.win)label+=`｜備B:${r3.label}✨`;
+  r.actual=actual;r.hits=result.hits;r.win=result.win||!!(r2&&r2.win)||!!(r3&&r3.win);r.winLabel=label;
   saveRecords(RECORDS);renderDBList(game);
 }
 
 function openDB(){document.getElementById('db-panel').style.display='block';document.body.style.overflow='hidden';renderDBList(currentDBGame);}
 function closeDB(){document.getElementById('db-panel').style.display='none';document.body.style.overflow='';}
-
-function switchDB(game,el){
-  currentDBGame=game;
-  document.querySelectorAll('.db-tab').forEach(t=>t.classList.remove('on'));
-  el.classList.add('on');renderDBList(game);
-}
+function switchDB(game,el){currentDBGame=game;document.querySelectorAll('.db-tab').forEach(t=>t.classList.remove('on'));el.classList.add('on');renderDBList(game);}
 
 function renderDBStats(game){
-  const records=RECORDS[game]||[];
-  const verified=records.filter(r=>r.actual);
-  const wins=verified.filter(r=>r.win);
-  const wr2=verified.length?(wins.length/verified.length*100).toFixed(0):'-';
-  document.getElementById('db-stats').innerHTML=`
-    <div class="db-stat"><div class="db-stat-val">${records.length}</div><div class="db-stat-lbl">總預測期數</div></div>
-    <div class="db-stat"><div class="db-stat-val">${verified.length}</div><div class="db-stat-lbl">已驗證期數</div></div>
-    <div class="db-stat"><div class="db-stat-val">${wins.length}</div><div class="db-stat-lbl">命中有獎次數</div></div>
-    <div class="db-stat"><div class="db-stat-val">${wr2}%</div><div class="db-stat-lbl">實際命中率</div></div>`;
+  const records=RECORDS[game]||[];const verified=records.filter(r=>r.actual);const wins=verified.filter(r=>r.win);const wr=verified.length?(wins.length/verified.length*100).toFixed(0):'-';
+  document.getElementById('db-stats').innerHTML=`<div class="db-stat"><div class="db-stat-val">${records.length}</div><div class="db-stat-lbl">總預測期數</div></div><div class="db-stat"><div class="db-stat-val">${verified.length}</div><div class="db-stat-lbl">已驗證</div></div><div class="db-stat"><div class="db-stat-val">${wins.length}</div><div class="db-stat-lbl">命中有獎</div></div><div class="db-stat"><div class="db-stat-val">${wr}%</div><div class="db-stat-lbl">實際命中率</div></div>`;
 }
 
 function renderDBList(game){
   renderDBStats(game);
-  const el=document.getElementById('db-list');
-  const records=RECORDS[game]||[];
-  const cfg=CFG[game];
-  if(!records.length){el.innerHTML='<div class="db-empty">尚無預測紀錄<br><span style="font-size:16px;margin-top:8px;display:block">按「立即生成預測」後會自動儲存</span></div>';return;}
+  const el=document.getElementById('db-list');const records=RECORDS[game]||[];const cfg=CFG[game];
+  if(!records.length){el.innerHTML='<div class="db-empty">尚無預測紀錄</div>';return;}
   el.innerHTML='';
   records.forEach((r,idx)=>{
     const item=document.createElement('div');item.className='db-item';
-    let winHtml=r.actual?(r.win?`<span class="db-win db-win-ok">✨ ${r.winLabel}</span>`:`<span class="db-win db-win-no">❌ ${r.winLabel||r.hits+'碼'}</span>`):`<span class="db-win db-win-pending">⏳ 待驗證</span>`;
+    const winHtml=r.actual?(r.win?`<span class="db-win db-win-ok">✨ ${r.winLabel||'有獎'}</span>`:`<span class="db-win db-win-no">❌ ${r.winLabel||r.hits+'碼'}</span>`):`<span class="db-win db-win-pending">⏳ 待驗證</span>`;
     const predBalls=r.pred.map(n=>{const isHit=r.actual&&r.actual.includes(n);const cls=r.actual?(isHit?'db-ball-hit':'db-ball-miss'):'db-ball-pred';return `<div class="db-ball ${cls}">${n<10?'0'+n:n}</div>`;}).join('');
+    let extra='';
+    if(r.pred2){const p2=r.pred2.map(n=>`<div class="db-ball db-ball-pred" style="opacity:0.7">${n<10?'0'+n:n}</div>`).join('');extra+=`<div style="margin-top:6px;font-size:13px;color:var(--muted)">備A: <span style="display:inline-flex;gap:3px">${p2}</span></div>`;}
     let actualHtml='';
-    if(r.actual){const actBalls=r.actual.map(n=>`<div class="db-ball db-ball-actual">${n<10?'0'+n:n}</div>`).join('');actualHtml=`<div class="db-actual-row" style="margin-top:8px"><span style="color:var(--muted);font-size:15px">實際開獎：</span><div class="db-balls" style="margin-top:5px">${actBalls}</div></div>`;}
-    let verifyHtml='';
-    if(!r.actual){let inputs='';for(let i=0;i<cfg.pick;i++)inputs+=`<input type="number" class="db-vi" min="1" max="${cfg.max}" placeholder="#${i+1}" id="dbv-${game}-${idx}-${i}">`;if(cfg.hasSp)inputs+=`<input type="number" class="db-vi" min="1" max="${cfg.spMax}" placeholder="特" id="dbv-${game}-${idx}-sp">`;verifyHtml=`<div class="db-verify-row">${inputs}<button class="db-vbtn" onclick="dbVerify('${game}',${idx})">驗 證</button></div>`;}
-    item.innerHTML=`<div class="db-item-head"><span class="db-date">📅 ${r.date}</span>${winHtml}</div><div style="font-size:15px;color:var(--muted);margin-bottom:8px">預測號碼：</div><div class="db-balls">${predBalls}</div>${actualHtml}${verifyHtml}`;
+    if(r.actual){const ab=r.actual.map(n=>`<div class="db-ball db-ball-actual">${n<10?'0'+n:n}</div>`).join('');actualHtml=`<div class="db-actual-row" style="margin-top:8px"><span>實際：</span><div class="db-balls" style="margin-top:5px">${ab}</div></div>`;}
+    let vHtml='';
+    if(!r.actual){let inputs='';for(let i=0;i<cfg.pick;i++)inputs+=`<input type="number" class="db-vi" min="1" max="${cfg.max}" placeholder="#${i+1}" id="dbv-${game}-${idx}-${i}">`;if(cfg.hasSp)inputs+=`<input type="number" class="db-vi" min="1" max="${cfg.spMax}" placeholder="特" id="dbv-${game}-${idx}-sp">`;vHtml=`<div class="db-verify-row">${inputs}<button class="db-vbtn" onclick="dbVerify('${game}',${idx})">驗 證</button></div>`;}
+    item.innerHTML=`<div class="db-item-head"><span class="db-date">📅 ${r.date}</span>${winHtml}</div><div style="font-size:14px;color:var(--muted);margin-bottom:7px">主推：</div><div class="db-balls">${predBalls}</div>${extra}${actualHtml}${vHtml}`;
     el.appendChild(item);
   });
 }
 
-// ---- 啟動 ----
 ['big','539','pw'].forEach(g=>initLatest(g));
 
 </script>

@@ -6,8 +6,9 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="theme-color" content="#09090f">
-<title>台彩三合一智慧預測</title>
+<title>台彩三合一智慧預測 v10</title>
 <style>
+
 
   :root {
     --bg: #09090f;
@@ -345,10 +346,28 @@
   .fab:active{transform:scale(0.92);}
   .fab-label{position:fixed;bottom:24px;right:88px;background:var(--s1);border:0.5px solid var(--border);border-radius:10px;padding:8px 14px;font-size:14px;color:var(--text);z-index:500;white-space:nowrap;box-shadow:0 2px 12px rgba(0,0,0,0.4);}
 
+
+  /* 動態優化引擎 */
+  .engine-card{background:var(--s2);border:0.5px solid rgba(0,229,160,0.2);border-radius:14px;padding:16px;margin-bottom:12px;}
+  .engine-title{font-size:18px;font-weight:700;color:var(--a3);margin-bottom:12px;display:flex;align-items:center;gap:8px;}
+  .method-rank-row{display:flex;align-items:center;gap:8px;padding:8px 0;border-bottom:0.5px solid rgba(255,255,255,0.05);}
+  .method-rank-row:last-child{border-bottom:none;}
+  .rank-medal{font-size:18px;width:28px;flex-shrink:0;}
+  .method-rank-name{font-size:15px;font-weight:500;width:76px;flex-shrink:0;}
+  .method-bars{flex:1;display:flex;flex-direction:column;gap:3px;}
+  .mini-bar-row{display:flex;align-items:center;gap:5px;font-size:11px;color:var(--muted);}
+  .mini-bar-lbl{width:30px;flex-shrink:0;}
+  .mini-bar-bg{flex:1;height:6px;background:var(--s3);border-radius:3px;overflow:hidden;}
+  .mini-bar-fill{height:100%;border-radius:3px;}
+  .method-score{font-family:'Courier New',monospace;font-size:16px;font-weight:700;width:44px;text-align:right;flex-shrink:0;}
+  .trend-badge{font-size:14px;width:20px;text-align:center;flex-shrink:0;}
+  .engine-note{font-size:13px;color:var(--muted);line-height:1.7;margin-top:10px;padding-top:10px;border-top:0.5px solid rgba(255,255,255,0.06);}
+  .top-method-highlight{background:rgba(0,229,160,0.08);border:0.5px solid rgba(0,229,160,0.2);border-radius:10px;padding:10px 14px;margin-bottom:10px;font-size:15px;}
+  .top-method-highlight b{color:var(--a3);}
+
 </style>
 </head>
 <body>
-
 <div class="header">
   <div class="header-inner">
     <div class="header-top">
@@ -591,11 +610,9 @@
 </div>
 
 </div><!-- end main -->
-
 <!-- 浮動查詢按鈕 -->
 <div class="fab-label">📋 預測紀錄</div>
 <button class="fab" onclick="openDB()" title="查詢預測紀錄">📋</button>
-
 <!-- 資料庫面板 -->
 <div class="db-panel" id="db-panel">
   <div class="db-inner">
@@ -612,7 +629,6 @@
     <div class="db-list" id="db-list"></div>
   </div>
 </div>
-
 <script>
 
 const CFG={
@@ -730,7 +746,6 @@ function isWin(game,pred,actual,actualSp,predSp){
   return{win:h>=3||(h>=1&&sp)||sp,hits:h,label:h>=3?`第一區${h}碼`:sp?`${h}碼+第二區`:`${h}碼`};
 }
 
-// ---- 台灣時間 ----
 function getTWNow(){
   const utc=Date.now()+(new Date().getTimezoneOffset()*60000);
   return new Date(utc+8*3600000);
@@ -759,7 +774,7 @@ function nextDate(game){
 function mkBall(n,cls){const d=document.createElement('div');d.className=`ball ${cls}`;d.textContent=n<10?'0'+n:String(n);return d;}
 function sleep(ms){return new Promise(r=>setTimeout(r,ms));}
 
-// ---- 10種預測方法（539/威力彩優化版）----
+// ---- 10種預測方法 ----
 function methods(game){
   const {max,pick}=CFG[game];
   const F=(D,mx)=>{const f={};for(let i=1;i<=mx;i++)f[i]=0;D.forEach(d=>d.n.forEach(n=>{if(n>=1&&n<=mx)f[n]++;}));return f;};
@@ -782,8 +797,7 @@ function methods(game){
       let best=null,bs=999;
       for(let i=0;i<=C.length-pick;i++){const co=C.slice(i,i+pick),sp=co[co.length-1]-co[0],sc=Math.abs(sp-tg);if(sc<bs){bs=sc;best=[...co];}}
       return best||s.slice(0,pick).map(x=>x.n).sort((a,b)=>a-b);}},
-    {id:'hot10',name:'近10期熱',col:'#FFD700',p(D){
-      return S(F(D.slice(0,Math.min(10,D.length)),max)).slice(0,pick).map(x=>x.n).sort((a,b)=>a-b);}},
+    {id:'hot10',name:'近10期熱',col:'#FFD700',p(D){return S(F(D.slice(0,Math.min(10,D.length)),max)).slice(0,pick).map(x=>x.n).sort((a,b)=>a-b);}},
     {id:'tail',name:'尾數熱門',col:'#FF9F43',p(D){
       const r=D.slice(0,Math.min(20,D.length));
       const tf={};for(let i=0;i<=9;i++)tf[i]=0;
@@ -831,8 +845,40 @@ function methods(game){
 
 function getPwSp(D){const sf={};for(let i=1;i<=8;i++)sf[i]=0;D.slice(0,20).forEach(d=>{if(d.s>=1&&d.s<=8)sf[d.s]++;});return sd(sf)[0].n;}
 
-// ---- 回測 ----
-function backtest(game){
+// ---- 🆕 動態加權引擎（核心優化）----
+function calcDynamicWeight(methodFn, D, game){
+  const minHit = game==='539' ? 2 : 3;
+  const spPredFn = game==='pw' ? getPwSp : ()=>0;
+
+  function hitRate(nRecent){
+    let wins=0,total=0;
+    for(let i=0;i<Math.min(nRecent,D.length-8);i++){
+      const train=D.slice(i+1);
+      if(train.length<8)continue;
+      const pred=methodFn(train);
+      const spPred=spPredFn(train);
+      const result=isWin(game,pred,D[i].n,D[i].s,spPred);
+      if(result.win)wins++;
+      total++;
+    }
+    return total>0?wins/total:0;
+  }
+
+  const r5  = hitRate(5);   // 近5期（短期趨勢，最重要）
+  const r20 = hitRate(20);  // 近20期（中期）
+  const rAll= hitRate(D.length); // 全期（基準）
+
+  // 動態加權：近期好的方法權重更高
+  const score = r5*0.60 + r20*0.30 + rAll*0.10;
+
+  // 近5期全空則給極低權重（不完全淘汰，避免過擬合）
+  const finalScore = r5===0 ? Math.max(score, 0.02) : Math.max(score, 0.03);
+
+  return {score:finalScore, r5, r20, rAll};
+}
+
+// ---- 回測（只用於顯示歷史命中率）----
+function simpleBacktest(game){
   const M=methods(game),D=DB[game],res={};M.forEach(m=>res[m.id]=[]);
   for(let i=0;i<D.length-10;i++){
     const train=D.slice(i+1);if(train.length<10)continue;
@@ -841,7 +887,6 @@ function backtest(game){
   }
   return res;
 }
-function wr(r){if(!r.length)return 0;return r.filter(x=>x.win).length/r.length*100;}
 
 // ---- 初始化 ----
 function initLatest(g){
@@ -851,7 +896,7 @@ function initLatest(g){
   l.n.forEach(n=>el.appendChild(mkBall(n,'bn')));
   if(CFG[g].hasSp&&l.s){const lb=document.createElement('span');lb.className='splbl';lb.textContent='特';el.appendChild(lb);el.appendChild(mkBall(l.s,'bpw2'));}
   const dc=document.getElementById(`dc-${g}`);
-  if(dc)dc.innerHTML=`✅ <b>${DB[g].length}</b> 期真實資料`;
+  if(dc)dc.innerHTML=`✅ <b>${DB[g].length}</b> 期真實資料｜自我優化引擎 v10`;
   buildInputs(g);
 }
 
@@ -875,13 +920,19 @@ function addDraw(g){
   if(DB[g].find(d=>d.d===dd)){alert(`${dd} 的資料已存在！`);return;}
   DB[g].unshift({d:dd,n:nums,s:sp});
   initLatest(g);
-  alert(`✅ 已加入 ${dd}（${nums.join(', ')}），共 ${DB[g].length} 期，請按「立即生成」重新預測！`);
+  alert(`✅ 已加入 ${dd}（${nums.join(', ')}）\n資料庫現有 ${DB[g].length} 期\n\n請按「立即生成」重新預測！系統會自動用最新資料重新評估各方法表現。`);
 }
 
-// ---- 生成預測 ----
+// ---- 🆕 核心生成函數（動態優化版）----
 async function gen(g){
   const D=DB[g];
-  const STEPS=[`載入 ${D.length} 期真實資料`,'計算10種版路方法','依正確中獎門檻回測','有獎命中率加權投票','產出最佳預測號碼'];
+  const STEPS=[
+    `載入 ${D.length} 期真實資料`,
+    '評估各方法近5期命中率（短期趨勢）',
+    '評估近20期命中率（中期穩定性）',
+    '動態加權：近期強的方法獲得更高話語權',
+    '最優方法組合投票→產出預測號碼'
+  ];
   const prog=document.getElementById(`prog-${g}`);
   prog.style.display='block';
   ['pc','rc','vc','hc'].forEach(p=>{const el=document.getElementById(`${p}-${g}`);if(el)el.style.display='none';});
@@ -889,17 +940,31 @@ async function gen(g){
   const lbl=document.getElementById(`pl-${g}`);
   const stEl=document.getElementById(`st-${g}`);stEl.innerHTML='';
   const sEls=STEPS.map(s=>{const d=document.createElement('div');d.className='step';d.innerHTML=`<div class="sdot">↻</div><span>${s}</span>`;stEl.appendChild(d);return d;});
+
   for(let i=0;i<STEPS.length;i++){
     sEls[i].classList.add('on');lbl.textContent=STEPS[i]+'...';
     fill.style.width=`${(i+0.5)/STEPS.length*100}%`;
-    await sleep(280+Math.random()*180);
+    await sleep(300+Math.random()*200);
     sEls[i].classList.remove('on');sEls[i].classList.add('done');sEls[i].querySelector('.sdot').textContent='✓';
   }
   fill.style.width='100%';lbl.textContent='完成！';
 
-  const cfg=CFG[g];const M=methods(g);const bt=backtest(g);
+  const cfg=CFG[g];
+  const M=methods(g);
+
+  // 計算動態權重
+  const methodScores=M.map(m=>{
+    const ws=calcDynamicWeight(m.p,D,g);
+    return {...m,...ws};
+  }).sort((a,b)=>b.score-a.score);
+
+  // 動態加權投票
   const votes={};for(let i=1;i<=cfg.max;i++)votes[i]=0;
-  M.forEach(m=>{const pred=m.p(D);const w=Math.max(wr(bt[m.id])/100,0.05);pred.forEach(n=>{if(n>=1&&n<=cfg.max)votes[n]+=w;});});
+  methodScores.forEach(m=>{
+    const pred=m.p(D);
+    pred.forEach(n=>{if(n>=1&&n<=cfg.max)votes[n]+=m.score;});
+  });
+
   const vs=sd(votes);
   const topN=vs.slice(0,cfg.pick).map(x=>x.n).sort((a,b)=>a-b);
   const backup=vs.slice(cfg.pick,cfg.pick+4).map(x=>x.n);
@@ -915,29 +980,73 @@ async function gen(g){
   const sm=topN.reduce((a,b)=>a+b,0),oe=topN.filter(n=>n%2===1).length;
   document.getElementById(`ft-${g}`).innerHTML=`<span>總和 <b>${sm}</b></span><span>奇偶 <b>${oe}奇${topN.length-oe}偶</b></span><span>跨度 <b>${topN[topN.length-1]-topN[0]}</b></span>`;
 
-  const ranked=M.map(m=>({...m,rate:wr(bt[m.id])})).sort((a,b)=>b.rate-a.rate);
-  const maxR=Math.max(...ranked.map(r=>r.rate),1);
-  const rl=document.getElementById(`rl-${g}`);rl.innerHTML='';
-  ranked.forEach((m,i)=>{
-    const row=document.createElement('div');row.className='mrow';
-    const rc=i===0?'r1':i===1?'r2':i===2?'r3':'rn';
-    const md=i===0?'🥇':i===1?'🥈':i===2?'🥉':i+1;
-    const col=m.rate>=30?'var(--a3)':m.rate>=15?'var(--gold)':'var(--muted)';
-    row.innerHTML=`<div class="rk ${rc}">${md}</div><div class="mn">${m.name}</div>
-      <div class="mbg"><div class="mfill" style="width:${Math.round(m.rate/maxR*100)}%;background:${m.col}"></div></div>
-      <div class="mpct" style="color:${col}">${m.rate.toFixed(1)}%</div>`;
-    rl.appendChild(row);
-  });
-  document.getElementById(`hn-${g}`).textContent=`回測${bt[ranked[0].id].length}期｜最佳：${ranked[0].name} ${ranked[0].rate.toFixed(1)}%`;
+  // 渲染動態排名
+  renderEngineRank(g, methodScores);
 
   preds[g]={pred:topN,sp:spNum,date:nd};
   saveNewPrediction(g,topN,spNum,nd);
   hist[g].unshift({date:nd,pred:topN,sp:spNum,hit:null,win:null,winLabel:null});
   renderHist(g);
+
   await sleep(200);
   prog.style.display='none';
   ['pc','rc','vc','hc'].forEach(p=>{const el=document.getElementById(`${p}-${g}`);if(el)el.style.display='block';});
   document.getElementById(`pc-${g}`).scrollIntoView({behavior:'smooth',block:'start'});
+}
+
+// ---- 渲染動態排名（引擎狀態）----
+function renderEngineRank(g, methodScores){
+  const el=document.getElementById(`rl-${g}`);el.innerHTML='';
+  const maxScore=Math.max(...methodScores.map(m=>m.score),0.01);
+  const top=methodScores[0];
+
+  // 最佳方法高亮
+  const topDiv=document.createElement('div');
+  topDiv.className='top-method-highlight';
+  topDiv.innerHTML=`🏆 當前最優方法：<b>${top.name}</b>　近5期命中率 <b style="color:var(--a3)">${(top.r5*100).toFixed(0)}%</b>　綜合分 <b style="color:var(--gold)">${(top.score*100).toFixed(1)}%</b>`;
+  el.appendChild(topDiv);
+
+  methodScores.forEach((m,i)=>{
+    const row=document.createElement('div');row.className='method-rank-row';
+    const medals=['🥇','🥈','🥉','4️⃣','5️⃣','6️⃣','7️⃣','8️⃣','9️⃣','🔟'];
+    const scoreColor=m.score>0.2?'var(--a3)':m.score>0.1?'var(--gold)':'var(--muted)';
+
+    // 趨勢：近5期 vs 近20期
+    let trend='→';
+    if(m.r5>m.r20*1.2)trend='↑';
+    else if(m.r5<m.r20*0.8)trend='↓';
+    const trendColor=trend==='↑'?'var(--a3)':trend==='↓'?'var(--a2)':'var(--muted)';
+
+    row.innerHTML=`
+      <span class="rank-medal">${medals[i]||i+1}</span>
+      <span class="method-rank-name">${m.name}</span>
+      <div class="method-bars">
+        <div class="mini-bar-row">
+          <span class="mini-bar-lbl">近5期</span>
+          <div class="mini-bar-bg"><div class="mini-bar-fill" style="width:${Math.round(m.r5/Math.max(methodScores[0].r5,0.01)*100)}%;background:#00e5a0"></div></div>
+          <span style="font-size:12px;color:var(--a3);width:32px;text-align:right">${(m.r5*100).toFixed(0)}%</span>
+        </div>
+        <div class="mini-bar-row">
+          <span class="mini-bar-lbl">近20期</span>
+          <div class="mini-bar-bg"><div class="mini-bar-fill" style="width:${Math.round(m.r20/Math.max(methodScores[0].r20,0.01)*100)}%;background:#7c6fff"></div></div>
+          <span style="font-size:12px;color:var(--a1);width:32px;text-align:right">${(m.r20*100).toFixed(0)}%</span>
+        </div>
+      </div>
+      <span class="trend-badge" style="color:${trendColor}">${trend}</span>
+      <span class="method-score" style="color:${scoreColor}">${(m.score*100).toFixed(1)}%</span>`;
+    el.appendChild(row);
+  });
+
+  const noteEl=document.getElementById(`hn-${g}`);
+  if(noteEl){
+    const activeCount=methodScores.filter(m=>m.r5>0).length;
+    noteEl.innerHTML=`
+      <div class="engine-note">
+        📊 動態優化引擎 v10｜${DB[g].length} 期真實資料<br>
+        🔄 近5期有效方法 <b style="color:var(--a3)">${activeCount}</b> / ${methodScores.length} 種<br>
+        💡 <b>每次開獎後</b>：輸入實際號碼 → 點「加入資料庫」→ 重新生成，系統自動重新評估各方法並優化權重
+      </div>`;
+  }
 }
 
 // ---- 驗證 ----
